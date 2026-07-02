@@ -1,15 +1,14 @@
 -- ============================================================================
--- Hub — Supabase schema (NO-AUTH / single shared dataset)
+-- Hub — Supabase schema (per-user, username + password auth)
 --
--- This version has no login: every device using this project shares the same
--- tasks / events / notes. RLS is enabled but permissive so the public "anon"
--- key can read + write.
+-- Login pakai username + password (tanpa email sungguhan). Setiap user hanya
+-- bisa melihat/mengubah datanya sendiri (RLS via auth.uid()).
 --
--- ⚠️  Anyone with your project URL + anon key can read/write this data. Fine
---     for a private personal app; not for anything sensitive.
+-- ⚠️  WAJIB: di Dashboard → Authentication → Providers → Email, MATIKAN
+--     "Confirm email" supaya pendaftaran tidak mengirim email verifikasi.
 --
 -- Run once in: Supabase Dashboard → SQL Editor → New query → Run.
--- Safe to re-run. (This DROPs the tables first — only dummy data is lost.)
+-- (This DROPs the tables first — only dummy data is lost.)
 -- ============================================================================
 
 drop table if exists public.tasks  cascade;
@@ -21,6 +20,7 @@ drop table if exists public.notes  cascade;
 -- ---------------------------------------------------------------------------
 create table public.tasks (
   id         uuid primary key default gen_random_uuid(),
+  user_id    uuid not null references auth.users (id) on delete cascade,
   title      text not null default '',
   due_date   text,               -- 'YYYY-MM-DD'
   due_time   text default '',    -- 'HH:MM'
@@ -33,6 +33,7 @@ create table public.tasks (
 
 create table public.events (
   id         uuid primary key default gen_random_uuid(),
+  user_id    uuid not null references auth.users (id) on delete cascade,
   title      text not null default '',
   event_date text,               -- 'YYYY-MM-DD'
   event_time text default '',    -- 'HH:MM'
@@ -44,24 +45,29 @@ create table public.events (
 
 create table public.notes (
   id         uuid primary key default gen_random_uuid(),
+  user_id    uuid not null references auth.users (id) on delete cascade,
   title      text default '',
   body       text default '',
   updated_at timestamptz default now()
 );
 
+create index if not exists tasks_user_idx  on public.tasks  (user_id);
+create index if not exists events_user_idx on public.events (user_id);
+create index if not exists notes_user_idx  on public.notes  (user_id);
+
 -- ---------------------------------------------------------------------------
--- Row Level Security — enabled, but open to the anon/authenticated roles.
+-- Row Level Security — each user only sees their own rows.
 -- ---------------------------------------------------------------------------
 alter table public.tasks  enable row level security;
 alter table public.events enable row level security;
 alter table public.notes  enable row level security;
 
-create policy "public tasks"  on public.tasks
-  for all to anon, authenticated using (true) with check (true);
-create policy "public events" on public.events
-  for all to anon, authenticated using (true) with check (true);
-create policy "public notes"  on public.notes
-  for all to anon, authenticated using (true) with check (true);
+create policy "own tasks" on public.tasks
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+create policy "own events" on public.events
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+create policy "own notes" on public.notes
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 -- ---------------------------------------------------------------------------
 -- Realtime — lets changes sync live across your devices.

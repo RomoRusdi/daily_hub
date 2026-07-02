@@ -8,25 +8,27 @@ const newId = () =>
 
 /**
  * A collection of records that is:
- *  - **local mode** (`cloud` false): kept in localStorage, seeded from `seed`.
- *  - **cloud mode** (`cloud` true): backed by a shared Supabase table, cached
+ *  - **local mode** (`userId` falsy): kept in localStorage, seeded from `seed`.
+ *  - **cloud mode** (`userId` set): backed by a per-user Supabase table, cached
  *    in localStorage for instant paint + offline reads, updated optimistically,
  *    and kept fresh via realtime.
  *
- * There's no auth: cloud mode is one shared dataset across all devices. The
- * returned API ({ items, insert, update, remove }) is identical in both modes.
+ * The returned API ({ items, insert, update, remove }) is identical in both
+ * modes, so DataContext doesn't care which one is active.
  *
  * @param {object}  cfg
  * @param {string}  cfg.key      localStorage cache key suffix (e.g. 'tasks')
  * @param {string}  cfg.table    Supabase table name
  * @param {Array}   cfg.seed     starter records (app shape)
  * @param {fn}      cfg.fromRow  (dbRow) => appRecord
- * @param {fn}      cfg.toRow    (appRecordOrPatch) => dbRow (only maps present keys)
+ * @param {fn}      cfg.toRow    (appRecordOrPatch, userId?) => dbRow (only maps present keys)
  * @param {fn}      [cfg.order]  comparator applied to app records after fetch
- * @param {boolean} cfg.cloud    enable Supabase backing
+ * @param {string}  [cfg.userId] current user id; presence enables cloud mode
  */
-export function useCollection({ key, table, seed, fromRow, toRow, order, cloud }) {
-  const cacheKey = `hub:cache:${key}`
+export function useCollection({ key, table, seed, fromRow, toRow, order, userId }) {
+  const cloud = Boolean(userId)
+  // Cache is scoped per user so switching accounts never mixes data.
+  const cacheKey = `hub:cache:${key}:${userId || 'local'}`
 
   const [items, setItems] = useState(() => {
     try {
@@ -60,25 +62,25 @@ export function useCollection({ key, table, seed, fromRow, toRow, order, cloud }
 
   const fetchAll = useCallback(async () => {
     if (!cloud) return
-    const { data, error } = await supabase.from(table).select('*')
+    const { data, error } = await supabase.from(table).select('*').eq('user_id', userId)
     if (error) {
       console.warn(`[${table}] fetch gagal`, error.message)
       return
     }
     let rows = (data || []).map(fromRow)
 
-    // Empty table → seed it so Hub feels alive on first run.
+    // Brand-new user with an empty table → seed it so Hub feels alive.
     if (rows.length === 0 && seed.length) {
       const seeded = seed.map((s) => ({ ...s, id: newId() }))
       const { error: seedErr } = await supabase
         .from(table)
-        .insert(seeded.map((s) => toRow(s)))
+        .insert(seeded.map((s) => toRow(s, userId)))
       if (!seedErr) rows = seeded
     }
 
     if (order) rows = [...rows].sort(order)
     write(rows)
-  }, [cloud, table, fromRow, toRow, seed, order, write])
+  }, [cloud, table, userId, fromRow, toRow, seed, order, write])
 
   fetchRef.current = fetchAll
 
@@ -87,10 +89,10 @@ export function useCollection({ key, table, seed, fromRow, toRow, order, cloud }
     fetchAll()
 
     const channel = supabase
-      .channel(`hub:${table}`)
+      .channel(`hub:${table}:${userId}`)
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table },
+        { event: '*', schema: 'public', table, filter: `user_id=eq.${userId}` },
         () => fetchRef.current?.(),
       )
       .subscribe()
@@ -98,22 +100,22 @@ export function useCollection({ key, table, seed, fromRow, toRow, order, cloud }
     return () => {
       supabase.removeChannel(channel)
     }
-    // Subscribe once per table; fetchAll is called through the ref.
+    // Re-subscribe only when the user changes; fetchAll is called via the ref.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cloud, table])
+  }, [cloud, table, userId])
 
   // ---- Optimistic mutations ----
   const insert = useCallback(
     async (record) => {
       write((prev) => [record, ...prev])
       if (!cloud) return
-      const { error } = await supabase.from(table).insert(toRow(record))
+      const { error } = await supabase.from(table).insert(toRow(record, userId))
       if (error) {
         console.warn(`[${table}] insert gagal`, error.message)
         fetchRef.current?.()
       }
     },
-    [cloud, table, toRow, write],
+    [cloud, table, userId, toRow, write],
   )
 
   const update = useCallback(

@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo } from 'react'
-import { isSupabaseConfigured } from '../lib/supabase'
+import { useAuth } from './AuthContext'
 import { useCollection, newId } from './useCollection'
 import { seedTasks, seedEvents, seedNotes, dateKey } from '../data/seed'
 
@@ -16,7 +16,7 @@ const DataContext = createContext(null)
 // `toRow` only maps keys present in the input, so it works for both full
 // inserts and partial patches.
 
-const tasksToRow = (t) => {
+const tasksToRow = (t, userId) => {
   const r = {}
   if ('id' in t) r.id = t.id
   if ('title' in t) r.title = t.title
@@ -26,6 +26,7 @@ const tasksToRow = (t) => {
   if ('reminder' in t) r.reminder = t.reminder
   if ('deadline' in t) r.deadline = t.deadline
   if ('done' in t) r.done = t.done
+  if (userId) r.user_id = userId
   return r
 }
 const tasksFromRow = (r) => ({
@@ -39,7 +40,7 @@ const tasksFromRow = (r) => ({
   done: !!r.done,
 })
 
-const eventsToRow = (e) => {
+const eventsToRow = (e, userId) => {
   const r = {}
   if ('id' in e) r.id = e.id
   if ('title' in e) r.title = e.title
@@ -48,6 +49,7 @@ const eventsToRow = (e) => {
   if ('duration' in e) r.duration = e.duration
   if ('location' in e) r.location = e.location
   if ('accent' in e) r.accent = e.accent
+  if (userId) r.user_id = userId
   return r
 }
 const eventsFromRow = (r) => ({
@@ -60,12 +62,13 @@ const eventsFromRow = (r) => ({
   accent: !!r.accent,
 })
 
-const notesToRow = (n) => {
+const notesToRow = (n, userId) => {
   const r = {}
   if ('id' in n) r.id = n.id
   if ('title' in n) r.title = n.title
   if ('body' in n) r.body = n.body
   if ('updatedAt' in n) r.updated_at = new Date(n.updatedAt).toISOString()
+  if (userId) r.user_id = userId
   return r
 }
 const notesFromRow = (r) => ({
@@ -76,8 +79,8 @@ const notesFromRow = (r) => ({
 })
 
 export function DataProvider({ children }) {
-  // No auth: cloud mode is on whenever Supabase credentials are present.
-  const cloud = isSupabaseConfigured
+  const { user } = useAuth()
+  const userId = user?.id // undefined => local mode
 
   const tasksCol = useCollection({
     key: 'tasks',
@@ -86,7 +89,7 @@ export function DataProvider({ children }) {
     fromRow: tasksFromRow,
     toRow: tasksToRow,
     order: (a, b) => (b.date || '').localeCompare(a.date || ''),
-    cloud,
+    userId,
   })
 
   const eventsCol = useCollection({
@@ -99,7 +102,7 @@ export function DataProvider({ children }) {
       a.date === b.date
         ? (a.time || '').localeCompare(b.time || '')
         : (a.date || '').localeCompare(b.date || ''),
-    cloud,
+    userId,
   })
 
   const notesCol = useCollection({
@@ -109,7 +112,7 @@ export function DataProvider({ children }) {
     fromRow: notesFromRow,
     toRow: notesToRow,
     order: (a, b) => b.updatedAt - a.updatedAt,
-    cloud,
+    userId,
   })
 
   const api = useMemo(() => {
