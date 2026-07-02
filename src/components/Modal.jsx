@@ -34,14 +34,13 @@ export default function Modal({ open, onClose, title, children }) {
         aria-modal="true"
         aria-label={title}
         className={
-          'relative w-full max-w-app bg-surface dark:bg-surface-dark ' +
-          'border-t border-line dark:border-line-dark sm:border ' +
+          'glass-strong relative w-full max-w-app ' +
           'rounded-t-2xl sm:rounded-2xl p-5 pb-[calc(1.25rem+var(--safe-bottom))] ' +
-          'sm:pb-5 shadow-lg animate-[slideUp_.2s_ease-out]'
+          'sm:pb-5 shadow-xl animate-[slideUp_.2s_ease-out]'
         }
       >
         {/* Grab handle (mobile) */}
-        <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-line dark:bg-line-dark sm:hidden" />
+        <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-ink/15 dark:bg-white/15 sm:hidden" />
 
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-base font-medium">{title}</h2>

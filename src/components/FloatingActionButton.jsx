@@ -13,7 +13,7 @@ export default function FloatingActionButton({ onClick, label = 'Tambah', icon: 
             type="button"
             onClick={onClick}
             aria-label={label}
-            className="pointer-events-auto flex h-14 w-14 items-center justify-center rounded-full bg-ink text-white shadow-lg transition-transform hover:scale-105 active:scale-95 dark:bg-ink-dark dark:text-bg-dark"
+            className="bg-brand shadow-brand pointer-events-auto flex h-14 w-14 items-center justify-center rounded-full transition-transform hover:scale-105 active:scale-95"
           >
             <Icon size={22} strokeWidth={2} />
           </button>

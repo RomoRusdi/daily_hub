@@ -11,7 +11,7 @@ const tabs = [
 // Fixed bottom navigation with a clear active indicator.
 export default function BottomNav() {
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/85 backdrop-blur-md dark:border-line-dark dark:bg-surface-dark/85">
+    <nav className="glass-strong fixed inset-x-0 bottom-0 z-40 border-x-0 border-b-0">
       <div className="mx-auto flex max-w-app items-stretch justify-around px-2 pb-[var(--safe-bottom)]">
         {tabs.map(({ to, label, icon: Icon }) => (
           <NavLink
@@ -27,7 +27,7 @@ export default function BottomNav() {
                   strokeWidth={isActive ? 2.2 : 1.75}
                   className={
                     isActive
-                      ? 'text-ink dark:text-ink-dark'
+                      ? 'text-brand'
                       : 'text-muted group-hover:text-subtle'
                   }
                 />
@@ -35,7 +35,7 @@ export default function BottomNav() {
                   className={
                     'text-[11px] leading-none ' +
                     (isActive
-                      ? 'font-medium text-ink dark:text-ink-dark'
+                      ? 'font-medium text-brand'
                       : 'text-muted group-hover:text-subtle')
                   }
                 >

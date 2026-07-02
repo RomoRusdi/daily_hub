@@ -32,7 +32,7 @@ function SectionTitle({ children, to }) {
 // Left "rail" of an event card: big time + small duration.
 function EventRail({ time, duration }) {
   return (
-    <div className="flex w-14 shrink-0 flex-col items-center justify-center rounded-xl bg-bg py-2 dark:bg-bg-dark">
+    <div className="flex w-14 shrink-0 flex-col items-center justify-center rounded-xl bg-white/40 py-2 dark:bg-white/5">
       <span className="text-sm font-semibold leading-none">{time || '—'}</span>
       {duration && (
         <span className="mt-1 text-[10px] text-muted">{duration}</span>
@@ -99,7 +99,7 @@ export default function Home() {
             </p>
           </div>
         </div>
-        <div className="mt-3 flex items-center justify-between border-t border-line pt-3 text-sm dark:border-line-dark">
+        <div className="mt-3 flex items-center justify-between border-t border-ink/10 pt-3 text-sm dark:border-white/10">
           <span className="inline-flex items-center gap-1.5 text-subtle">
             <CalendarClock size={15} strokeWidth={1.75} /> Acara berikutnya
           </span>
@@ -118,7 +118,7 @@ export default function Home() {
               Tidak ada tugas untuk hari ini.
             </p>
           ) : (
-            <div className="divide-y divide-line dark:divide-line-dark">
+            <div className="divide-y divide-ink/5 dark:divide-white/10">
               {todaysTasks.slice(0, 5).map((task) => (
                 <TaskRow
                   key={task.id}

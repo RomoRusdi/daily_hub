@@ -23,9 +23,9 @@ export default function AIPrompt() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex items-center gap-2 rounded-2xl border border-line bg-surface px-3.5 py-3 focus-within:border-subtle dark:border-line-dark dark:bg-surface-dark"
+      className="glass flex items-center gap-2 rounded-2xl px-3.5 py-3"
     >
-      <Sparkles size={18} strokeWidth={1.75} className="shrink-0 text-accent" />
+      <Sparkles size={18} strokeWidth={1.75} className="shrink-0 text-brand" />
       <input
         value={value}
         onChange={(e) => setValue(e.target.value)}
@@ -37,7 +37,7 @@ export default function AIPrompt() {
         type="submit"
         aria-label="Kirim"
         disabled={!value.trim()}
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ink text-white transition-opacity disabled:opacity-30 dark:bg-ink-dark dark:text-bg-dark"
+        className="bg-brand flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-opacity disabled:opacity-30"
       >
         <ArrowUp size={16} strokeWidth={2.25} />
       </button>

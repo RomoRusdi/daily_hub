@@ -12,7 +12,7 @@ import NoteEditor from './pages/NoteEditor'
  */
 export default function App() {
   return (
-    <div className="min-h-dvh bg-bg dark:bg-bg-dark">
+    <div className="min-h-dvh">
       <div className="mx-auto min-h-dvh max-w-app px-4 pb-28 sm:max-w-xl">
         <Routes>
           <Route path="/" element={<Home />} />

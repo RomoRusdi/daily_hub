@@ -25,7 +25,7 @@ export default function Header({ name = 'Arya', title, showDate = true, action }
         <ThemeToggle />
         <span
           aria-hidden
-          className="flex h-9 w-9 items-center justify-center rounded-xl border border-line bg-surface text-sm font-medium text-ink dark:border-line-dark dark:bg-surface-dark dark:text-ink-dark"
+          className="glass flex h-9 w-9 items-center justify-center rounded-xl text-sm font-medium text-ink dark:text-ink-dark"
         >
           {name.charAt(0).toUpperCase()}
         </span>

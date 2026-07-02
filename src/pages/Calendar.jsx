@@ -56,12 +56,12 @@ export default function Calendar() {
         <h2 className="text-xl font-semibold tracking-tight">
           {MONTHS[view.month]} {view.year}
         </h2>
-        <div className="flex items-center gap-1 rounded-full border border-line p-0.5 dark:border-line-dark">
+        <div className="glass flex items-center gap-1 rounded-full p-0.5">
           <button
             type="button"
             onClick={() => shiftMonth(-1)}
             aria-label="Bulan sebelumnya"
-            className="rounded-full p-1.5 text-subtle hover:bg-line/50 dark:hover:bg-line-dark/50"
+            className="rounded-full p-1.5 text-subtle hover:bg-white/50 dark:hover:bg-white/10"
           >
             <ChevronLeft size={17} />
           </button>
@@ -69,7 +69,7 @@ export default function Calendar() {
             type="button"
             onClick={() => shiftMonth(1)}
             aria-label="Bulan berikutnya"
-            className="rounded-full p-1.5 text-subtle hover:bg-line/50 dark:hover:bg-line-dark/50"
+            className="rounded-full p-1.5 text-subtle hover:bg-white/50 dark:hover:bg-white/10"
           >
             <ChevronRight size={17} />
           </button>
@@ -103,10 +103,10 @@ export default function Calendar() {
                   className={
                     'flex h-9 w-9 items-center justify-center rounded-full text-sm transition-colors ' +
                     (isSelected
-                      ? 'bg-ink text-white dark:bg-ink-dark dark:text-bg-dark'
+                      ? 'bg-brand shadow-brand'
                       : isToday
-                        ? 'font-semibold text-accent'
-                        : 'text-ink hover:bg-line/50 dark:text-ink-dark dark:hover:bg-line-dark/50')
+                        ? 'font-semibold text-brand'
+                        : 'text-ink hover:bg-white/50 dark:text-ink-dark dark:hover:bg-white/10')
                   }
                 >
                   {day}
@@ -116,7 +116,7 @@ export default function Calendar() {
                     'mt-0.5 h-1 w-1 rounded-full ' +
                     (hasEvent
                       ? isSelected
-                        ? 'bg-ink dark:bg-ink-dark'
+                        ? 'bg-white'
                         : 'bg-accent'
                       : 'bg-transparent')
                   }
@@ -160,10 +160,10 @@ export default function Calendar() {
                 <span
                   className={
                     'mt-1 h-2 w-2 rounded-full ' +
-                    (ev.accent ? 'bg-accent' : 'bg-ink dark:bg-ink-dark')
+                    (ev.accent ? 'bg-accent' : 'bg-brand')
                   }
                 />
-                <span className="w-px flex-1 bg-line dark:bg-line-dark" />
+                <span className="w-px flex-1 bg-ink/10 dark:bg-white/10" />
               </div>
 
               {/* Event card */}

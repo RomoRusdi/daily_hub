@@ -68,7 +68,7 @@ export default function AddTaskModal({ open, onClose, onSubmit, defaultDate }) {
           className="w-full bg-transparent pb-3 text-lg font-medium placeholder:text-muted focus:outline-none"
         />
 
-        <div className="divide-y divide-line dark:divide-line-dark border-y border-line dark:border-line-dark">
+        <div className="divide-y divide-ink/5 dark:divide-white/10 border-y border-ink/10 dark:border-white/10">
           <Row icon={CalendarDays} label="Tanggal & waktu">
             <input
               type="date"
@@ -97,8 +97,8 @@ export default function AddTaskModal({ open, onClose, onSubmit, defaultDate }) {
                   'rounded-lg px-2.5 py-1 text-xs font-medium transition-colors ' +
                   (priority === p.key
                     ? p.key === 'high'
-                      ? 'bg-accent/10 text-accent'
-                      : 'bg-ink text-white dark:bg-ink-dark dark:text-bg-dark'
+                      ? 'bg-accent/15 text-accent'
+                      : 'bg-brand'
                     : 'text-muted hover:text-subtle')
                 }
               >

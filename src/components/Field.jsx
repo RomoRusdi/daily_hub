@@ -1,8 +1,8 @@
 // Shared form-field styling so modals stay visually consistent.
 export const inputClass =
-  'w-full rounded-xl border border-line bg-bg px-3.5 py-2.5 text-sm text-ink ' +
-  'placeholder:text-muted focus:border-subtle focus:outline-none ' +
-  'dark:border-line-dark dark:bg-bg-dark dark:text-ink-dark'
+  'input-glass w-full rounded-xl px-3.5 py-2.5 text-sm text-ink ' +
+  'placeholder:text-muted focus:outline-none ring-brand ' +
+  'dark:text-ink-dark'
 
 export function Field({ label, children }) {
   return (

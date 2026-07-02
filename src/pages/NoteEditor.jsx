@@ -22,7 +22,7 @@ function RoundBtn({ label, onClick, children }) {
       type="button"
       onClick={onClick}
       aria-label={label}
-      className="flex h-9 w-9 items-center justify-center rounded-full border border-line bg-surface text-subtle transition-colors hover:text-ink dark:border-line-dark dark:bg-surface-dark dark:hover:text-ink-dark"
+      className="glass flex h-9 w-9 items-center justify-center rounded-full text-subtle transition-colors hover:text-ink dark:hover:text-ink-dark"
     >
       {children}
     </button>
@@ -140,7 +140,7 @@ export default function NoteEditor() {
       />
 
       {/* Bottom formatting toolbar */}
-      <div className="sticky bottom-24 mt-4 flex items-center justify-between rounded-2xl border border-line bg-surface/90 px-3 py-2 backdrop-blur dark:border-line-dark dark:bg-surface-dark/90">
+      <div className="glass-strong sticky bottom-24 mt-4 flex items-center justify-between rounded-2xl px-3 py-2">
         <div className="flex items-center gap-1">
           {toolbar.map(({ icon: Icon, label, onClick }) => (
             <button
@@ -148,7 +148,7 @@ export default function NoteEditor() {
               type="button"
               onClick={onClick}
               aria-label={label}
-              className="rounded-lg p-2 text-subtle hover:bg-line/50 hover:text-ink dark:hover:bg-line-dark/50 dark:hover:text-ink-dark"
+              className="rounded-lg p-2 text-subtle hover:bg-white/50 hover:text-ink dark:hover:bg-white/10 dark:hover:text-ink-dark"
             >
               <Icon size={18} strokeWidth={1.75} />
             </button>
@@ -159,7 +159,7 @@ export default function NoteEditor() {
           type="button"
           onClick={() => toast('Fitur AI segera hadir ✨')}
           aria-label="Asisten AI"
-          className="rounded-lg p-2 text-accent hover:bg-accent/10"
+          className="text-brand bg-brand-soft rounded-lg p-2"
         >
           <Sparkles size={18} strokeWidth={1.75} />
         </button>

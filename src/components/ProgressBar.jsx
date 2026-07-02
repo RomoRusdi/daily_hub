@@ -10,7 +10,7 @@ export default function ProgressBar({ value = 0, className = '' }) {
       aria-valuemax={100}
     >
       <div
-        className="h-full rounded-full bg-ink transition-all duration-500 dark:bg-ink-dark"
+        className="bg-brand h-full rounded-full transition-all duration-500"
         style={{ width: `${pct}%` }}
       />
     </div>

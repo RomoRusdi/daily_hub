@@ -29,7 +29,7 @@ function TaskGroup({ label, items, ...handlers }) {
     <>
       <GroupLabel count={items.length}>{label}</GroupLabel>
       <Card className="px-4 py-1">
-        <div className="divide-y divide-line dark:divide-line-dark">
+        <div className="divide-y divide-ink/5 dark:divide-white/10">
           {items.map((t) => (
             <TaskRow key={t.id} task={t} {...handlers} />
           ))}

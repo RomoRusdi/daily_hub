@@ -6,6 +6,7 @@ import Card from '../components/Card'
 import EmptyState from '../components/EmptyState'
 import FloatingActionButton from '../components/FloatingActionButton'
 import Button from '../components/Button'
+import { inputClass } from '../components/Field'
 import { useData } from '../store/DataContext'
 import { shortDate, toKey } from '../utils/date'
 
@@ -57,7 +58,7 @@ export default function Notes() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Cari catatan…"
-          className="mb-3 w-full rounded-xl border border-line bg-bg px-3.5 py-2.5 text-sm placeholder:text-muted focus:border-subtle focus:outline-none dark:border-line-dark dark:bg-bg-dark"
+          className={`${inputClass} mb-3`}
         />
       )}
 

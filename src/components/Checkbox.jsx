@@ -15,10 +15,10 @@ export default function Checkbox({ checked, onChange, accent = false, label }) {
         (checked
           ? accent
             ? 'bg-accent border-accent text-white'
-            : 'bg-ink border-ink text-white dark:bg-ink-dark dark:border-ink-dark dark:text-bg-dark'
+            : 'bg-brand border-transparent'
           : accent
             ? 'border-accent/60 hover:border-accent'
-            : 'border-line dark:border-line-dark hover:border-subtle')
+            : 'border-ink/25 dark:border-white/25 hover:border-subtle')
       }
     >
       {checked && <Check size={13} strokeWidth={3} />}

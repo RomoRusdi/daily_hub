@@ -25,7 +25,7 @@ export default function ProgressRing({ value = 0, size = 56, stroke = 5, label }
           strokeLinecap="round"
           strokeDasharray={c}
           strokeDashoffset={offset}
-          className="stroke-ink transition-all duration-500 dark:stroke-ink-dark"
+          className="stroke-brand transition-all duration-500"
         />
       </svg>
       <span className="absolute inset-0 flex items-center justify-center text-xs font-semibold">

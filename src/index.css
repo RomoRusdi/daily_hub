@@ -8,18 +8,110 @@
   }
 
   body {
-    @apply bg-bg text-ink dark:bg-bg-dark dark:text-ink-dark font-sans antialiased;
+    @apply text-ink dark:text-ink-dark font-sans antialiased;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    min-height: 100dvh;
   }
 
-  /* Respect iOS safe areas for the fixed bottom nav. */
+  /* Fixed gradient backdrop behind everything (glassmorphism canvas). */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(90% 60% at 12% 8%, rgba(139, 92, 246, 0.22), transparent 60%),
+      radial-gradient(90% 60% at 100% 100%, rgba(251, 146, 108, 0.28), transparent 55%),
+      linear-gradient(160deg, #ece7f8 0%, #f3e7f1 45%, #fbeee2 100%);
+  }
+
+  .dark body::before {
+    background:
+      radial-gradient(100% 55% at 50% 100%, rgba(234, 88, 12, 0.22), transparent 60%),
+      radial-gradient(70% 45% at 100% 0%, rgba(245, 158, 11, 0.12), transparent 60%),
+      linear-gradient(160deg, #0c0a09 0%, #0a0a0a 60%, #100b06 100%);
+  }
+
+  /* Brand accent — shifts hue between light (violet) and dark (amber). */
   :root {
+    --brand-from: #8b5cf6;
+    --brand-to: #7c3aed;
+    --brand: #7c3aed;
+    --brand-soft: rgba(124, 58, 237, 0.12);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .dark {
+    --brand-from: #f59e0b;
+    --brand-to: #ea580c;
+    --brand: #f59e0b;
+    --brand-soft: rgba(245, 158, 11, 0.16);
+  }
+}
+
+@layer components {
+  /* Frosted glass surface. */
+  .glass {
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 30px rgba(31, 38, 135, 0.08);
+  }
+  .dark .glass {
+    background: rgba(30, 27, 24, 0.5);
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Heavier glass for chrome (nav, modal) — more opaque, stronger blur. */
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(24px) saturate(170%);
+    -webkit-backdrop-filter: blur(24px) saturate(170%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+  }
+  .dark .glass-strong {
+    background: rgba(20, 18, 16, 0.72);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  /* Translucent input that sits on glass. */
+  .input-glass {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+  }
+  .dark .input-glass {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Brand helpers. */
+  .bg-brand {
+    background-image: linear-gradient(135deg, var(--brand-from), var(--brand-to));
+    color: #fff;
+  }
+  .bg-brand-soft {
+    background: var(--brand-soft);
+  }
+  .text-brand {
+    color: var(--brand);
+  }
+  .border-brand {
+    border-color: var(--brand);
+  }
+  .stroke-brand {
+    stroke: var(--brand);
+  }
+  .shadow-brand {
+    box-shadow: 0 12px 26px -8px color-mix(in srgb, var(--brand) 60%, transparent);
+  }
+  .ring-brand:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 30%, transparent);
   }
 }
 
 @layer utilities {
-  /* Thin, calm scrollbars that fade into the monochrome palette. */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
