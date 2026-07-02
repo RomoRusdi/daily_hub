@@ -1,0 +1,80 @@
+-- ============================================================================
+-- Hub — Supabase schema (NO-AUTH / single shared dataset)
+--
+-- This version has no login: every device using this project shares the same
+-- tasks / events / notes. RLS is enabled but permissive so the public "anon"
+-- key can read + write.
+--
+-- ⚠️  Anyone with your project URL + anon key can read/write this data. Fine
+--     for a private personal app; not for anything sensitive.
+--
+-- Run once in: Supabase Dashboard → SQL Editor → New query → Run.
+-- Safe to re-run. (This DROPs the tables first — only dummy data is lost.)
+-- ============================================================================
+
+drop table if exists public.tasks  cascade;
+drop table if exists public.events cascade;
+drop table if exists public.notes  cascade;
+
+-- ---------------------------------------------------------------------------
+-- Tables
+-- ---------------------------------------------------------------------------
+create table public.tasks (
+  id         uuid primary key default gen_random_uuid(),
+  title      text not null default '',
+  due_date   text,               -- 'YYYY-MM-DD'
+  due_time   text default '',    -- 'HH:MM'
+  priority   text default 'normal',
+  reminder   text default '',
+  deadline   boolean default false,
+  done       boolean default false,
+  created_at timestamptz default now()
+);
+
+create table public.events (
+  id         uuid primary key default gen_random_uuid(),
+  title      text not null default '',
+  event_date text,               -- 'YYYY-MM-DD'
+  event_time text default '',    -- 'HH:MM'
+  duration   text default '',
+  location   text default '',
+  accent     boolean default false,
+  created_at timestamptz default now()
+);
+
+create table public.notes (
+  id         uuid primary key default gen_random_uuid(),
+  title      text default '',
+  body       text default '',
+  updated_at timestamptz default now()
+);
+
+-- ---------------------------------------------------------------------------
+-- Row Level Security — enabled, but open to the anon/authenticated roles.
+-- ---------------------------------------------------------------------------
+alter table public.tasks  enable row level security;
+alter table public.events enable row level security;
+alter table public.notes  enable row level security;
+
+create policy "public tasks"  on public.tasks
+  for all to anon, authenticated using (true) with check (true);
+create policy "public events" on public.events
+  for all to anon, authenticated using (true) with check (true);
+create policy "public notes"  on public.notes
+  for all to anon, authenticated using (true) with check (true);
+
+-- ---------------------------------------------------------------------------
+-- Realtime — lets changes sync live across your devices.
+-- (Ignore "already member" errors if you re-run this.)
+-- ---------------------------------------------------------------------------
+do $$ begin
+  alter publication supabase_realtime add table public.tasks;
+exception when duplicate_object then null; end $$;
+
+do $$ begin
+  alter publication supabase_realtime add table public.events;
+exception when duplicate_object then null; end $$;
+
+do $$ begin
+  alter publication supabase_realtime add table public.notes;
+exception when duplicate_object then null; end $$;
