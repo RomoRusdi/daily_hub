@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { ChevronRight, MapPin, CalendarClock, Plus } from 'lucide-react'
 import Header from '../components/Header'
@@ -119,14 +120,17 @@ export default function Home() {
             </p>
           ) : (
             <div className="divide-y divide-ink/5 dark:divide-white/10">
-              {todaysTasks.slice(0, 5).map((task) => (
-                <TaskRow
-                  key={task.id}
-                  task={task}
-                  onToggle={toggleTask}
-                  indicator="badge"
-                />
-              ))}
+              <AnimatePresence initial={false}>
+                {todaysTasks.slice(0, 5).map((task, i) => (
+                  <TaskRow
+                    key={task.id}
+                    task={task}
+                    index={i}
+                    onToggle={toggleTask}
+                    indicator="badge"
+                  />
+                ))}
+              </AnimatePresence>
             </div>
           )}
         </Card>

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
 import { CheckCheck, Search, SlidersHorizontal } from 'lucide-react'
 import Header from '../components/Header'
 import Card from '../components/Card'
@@ -30,9 +31,11 @@ function TaskGroup({ label, items, ...handlers }) {
       <GroupLabel count={items.length}>{label}</GroupLabel>
       <Card className="px-4 py-1">
         <div className="divide-y divide-ink/5 dark:divide-white/10">
-          {items.map((t) => (
-            <TaskRow key={t.id} task={t} {...handlers} />
-          ))}
+          <AnimatePresence initial={false}>
+            {items.map((t, i) => (
+              <TaskRow key={t.id} task={t} index={i} {...handlers} />
+            ))}
+          </AnimatePresence>
         </div>
       </Card>
     </>

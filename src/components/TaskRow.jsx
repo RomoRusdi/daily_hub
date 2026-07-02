@@ -1,5 +1,7 @@
+import { motion } from 'framer-motion'
 import { Trash2 } from 'lucide-react'
 import Checkbox from './Checkbox'
+import { listItem } from '../lib/motion'
 import { todayKey, weekdayDate } from '../utils/date'
 
 // Build the muted subtitle under a task title.
@@ -15,13 +17,22 @@ function subtitleFor(task) {
  *
  * @param {'badge'|'dot'|'none'} [indicator] how to flag urgent (high) tasks
  * @param {fn} [onDelete] when provided, a trash button appears on hover
+ * @param {number} [index] position in the list, used for stagger delay
  */
-export default function TaskRow({ task, onToggle, onDelete, indicator = 'dot' }) {
+export default function TaskRow({ task, onToggle, onDelete, indicator = 'dot', index = 0 }) {
   const urgent = task.priority === 'high' && !task.done
   const subtitle = subtitleFor(task)
 
   return (
-    <div className="group flex items-center gap-3 py-2.5">
+    <motion.div
+      layout="position"
+      variants={listItem}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      custom={index}
+      className="group flex items-center gap-3 py-2.5"
+    >
       <Checkbox
         checked={task.done}
         accent={urgent}
@@ -65,6 +76,6 @@ export default function TaskRow({ task, onToggle, onDelete, indicator = 'dot' })
           <Trash2 size={16} />
         </button>
       )}
-    </div>
+    </motion.div>
   )
 }

@@ -1,14 +1,19 @@
+import { AnimatePresence, motion } from 'framer-motion'
 import { Check } from 'lucide-react'
+import { SPRING } from '../lib/motion'
 
-// Custom monochrome checkbox. `accent` tints the checked fill amber (urgent).
+// Custom circular checkbox. `accent` tints the checked fill amber (urgent).
+// The check mark pops in with a soft spring; the button gives tap feedback.
 export default function Checkbox({ checked, onChange, accent = false, label }) {
   return (
-    <button
+    <motion.button
       type="button"
       role="checkbox"
       aria-checked={checked}
       aria-label={label}
       onClick={onChange}
+      whileTap={{ scale: 0.85 }}
+      transition={SPRING}
       className={
         'flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full border ' +
         'transition-colors ' +
@@ -21,7 +26,18 @@ export default function Checkbox({ checked, onChange, accent = false, label }) {
             : 'border-ink/25 dark:border-white/25 hover:border-subtle')
       }
     >
-      {checked && <Check size={13} strokeWidth={3} />}
-    </button>
+      <AnimatePresence>
+        {checked && (
+          <motion.span
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1, transition: SPRING }}
+            exit={{ scale: 0, opacity: 0, transition: { duration: 0.1 } }}
+            className="flex"
+          >
+            <Check size={13} strokeWidth={3} />
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </motion.button>
   )
 }

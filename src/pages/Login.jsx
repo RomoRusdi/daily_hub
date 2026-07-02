@@ -38,12 +38,12 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center px-6">
-      <div className="absolute right-4 top-4">
+    <div className="pt-safe pb-safe px-safe flex min-h-dvh flex-col items-center justify-center">
+      <div className="pt-safe pr-safe absolute right-4 top-4">
         <ThemeToggle />
       </div>
 
-      <div className="w-full max-w-sm">
+      <div className="w-full max-w-sm px-6">
         {/* Brand */}
         <div className="mb-8 flex flex-col items-center text-center">
           <div className="bg-brand shadow-brand mb-4 flex h-14 w-14 items-center justify-center rounded-2xl">

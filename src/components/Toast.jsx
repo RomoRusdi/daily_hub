@@ -1,5 +1,7 @@
 import { createContext, useCallback, useContext, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { AnimatePresence, motion } from 'framer-motion'
+import { SPRING } from '../lib/motion'
 
 const ToastContext = createContext(null)
 
@@ -19,15 +21,21 @@ export function ToastProvider({ children }) {
     <ToastContext.Provider value={toast}>
       {children}
       {createPortal(
-        <div className="pointer-events-none fixed inset-x-0 bottom-24 z-[60] flex flex-col items-center gap-2 px-4">
-          {toasts.map((t) => (
-            <div
-              key={t.id}
-              className="pointer-events-auto rounded-full bg-ink px-4 py-2 text-sm text-white shadow-lg dark:bg-ink-dark dark:text-bg-dark"
-            >
-              {t.message}
-            </div>
-          ))}
+        <div className="pointer-events-none fixed inset-x-0 bottom-24 z-[60] flex flex-col items-center gap-2 px-4 pb-[var(--safe-bottom)]">
+          <AnimatePresence>
+            {toasts.map((t) => (
+              <motion.div
+                key={t.id}
+                layout="position"
+                initial={{ opacity: 0, y: 14, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1, transition: SPRING }}
+                exit={{ opacity: 0, y: 8, scale: 0.95, transition: { duration: 0.18 } }}
+                className="pointer-events-auto rounded-full bg-ink px-4 py-2 text-sm text-white shadow-lg dark:bg-ink-dark dark:text-bg-dark"
+              >
+                {t.message}
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>,
         document.body,
       )}
