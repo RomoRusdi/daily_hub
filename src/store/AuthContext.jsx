@@ -23,6 +23,18 @@ const usernameToEmail = (username) =>
 // Display name from the stored email (strip the fake domain).
 export const usernameFromEmail = (email = '') => email.replace(`@${EMAIL_DOMAIN}`, '')
 
+// Wipe all hybrid-store caches so the next person on this device can't read
+// the previous user's tasks/notes from localStorage.
+function purgeDataCaches() {
+  try {
+    Object.keys(window.localStorage)
+      .filter((k) => k.startsWith('hub:cache:'))
+      .forEach((k) => window.localStorage.removeItem(k))
+  } catch {
+    /* ignore */
+  }
+}
+
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null)
   const [loading, setLoading] = useState(isSupabaseConfigured)
@@ -39,7 +51,9 @@ export function AuthProvider({ children }) {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, next) => {
+    } = supabase.auth.onAuthStateChange((event, next) => {
+      // Covers explicit sign-out, expiry, and sign-out from another tab.
+      if (event === 'SIGNED_OUT') purgeDataCaches()
       setSession(next)
       setLoading(false)
     })

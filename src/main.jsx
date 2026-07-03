@@ -6,6 +6,7 @@ import App from './App'
 import { AuthProvider } from './store/AuthContext'
 import { DataProvider } from './store/DataContext'
 import { ToastProvider } from './components/Toast'
+import BackdropGlow from './components/BackdropGlow'
 import './index.css'
 
 createRoot(document.getElementById('root')).render(
@@ -13,6 +14,9 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       {/* reducedMotion="user" honours prefers-reduced-motion globally. */}
       <MotionConfig reducedMotion="user">
+        {/* Decorative moving glows — outside App so the login screen gets
+            them too; sits behind everything (see BackdropGlow.jsx). */}
+        <BackdropGlow />
         <ToastProvider>
           <AuthProvider>
             <DataProvider>

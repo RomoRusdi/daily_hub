@@ -10,22 +10,38 @@ const tabs = [
   { to: '/notes', label: 'Notes', icon: StickyNote },
 ]
 
-// Fixed bottom navigation. The soft pill behind the active icon shares a
-// layoutId, so it glides between tabs when the route changes.
+/**
+ * Floating pill navigation: a fully rounded glass capsule that hovers above
+ * the bottom edge instead of a full-bleed bar. Icon-only for a clean read —
+ * each tab keeps an sr-only label, and NavLink sets aria-current="page" on
+ * the active one.
+ *
+ * The outer wrapper is pointer-events-none so the gutters beside the pill
+ * don't swallow taps; only the capsule itself is interactive. Bottom offset
+ * is max(safe-area, 12px) so the pill clears the iPhone home indicator but
+ * still floats on devices without one.
+ *
+ * The soft highlight behind the active icon shares a layoutId, so it glides
+ * between tabs on route change (instant under prefers-reduced-motion via
+ * <MotionConfig reducedMotion="user"> in main.jsx).
+ */
 export default function BottomNav() {
   return (
-    <nav className="glass-strong px-safe fixed inset-x-0 bottom-0 z-40 border-x-0 border-b-0">
-      <div className="mx-auto flex max-w-app items-stretch justify-around px-2 pb-[var(--safe-bottom)]">
-        {tabs.map(({ to, label, icon: Icon }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={to === '/'}
-            className="group flex flex-1 flex-col items-center gap-1 py-2.5"
-          >
-            {({ isActive }) => (
-              <>
-                <span className="relative flex h-7 w-12 items-center justify-center">
+    <nav
+      aria-label="Navigasi utama"
+      className="px-safe pointer-events-none fixed inset-x-0 bottom-0 z-40"
+    >
+      <div className="mx-auto max-w-app px-4 pb-[max(var(--safe-bottom),0.75rem)] sm:max-w-xl">
+        <div className="glass-strong pointer-events-auto flex items-center justify-around rounded-full p-1.5 shadow-[0_16px_38px_-14px_rgba(31,38,135,0.35)] dark:shadow-[0_16px_38px_-14px_rgba(0,0,0,0.65)]">
+          {tabs.map(({ to, label, icon: Icon }) => (
+            <NavLink
+              key={to}
+              to={to}
+              end={to === '/'}
+              className="group flex flex-1 justify-center"
+            >
+              {({ isActive }) => (
+                <span className="relative flex h-11 w-16 items-center justify-center">
                   {isActive && (
                     <motion.span
                       layoutId="nav-pill"
@@ -43,21 +59,12 @@ export default function BottomNav() {
                         : 'text-muted group-hover:text-subtle')
                     }
                   />
+                  <span className="sr-only">{label}</span>
                 </span>
-                <span
-                  className={
-                    'text-[11px] leading-none ' +
-                    (isActive
-                      ? 'font-medium text-brand'
-                      : 'text-muted group-hover:text-subtle')
-                  }
-                >
-                  {label}
-                </span>
-              </>
-            )}
-          </NavLink>
-        ))}
+              )}
+            </NavLink>
+          ))}
+        </div>
       </div>
     </nav>
   )

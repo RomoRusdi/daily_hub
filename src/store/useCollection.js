@@ -30,7 +30,7 @@ export function useCollection({ key, table, seed, fromRow, toRow, order, userId 
   // Cache is scoped per user so switching accounts never mixes data.
   const cacheKey = `hub:cache:${key}:${userId || 'local'}`
 
-  const [items, setItems] = useState(() => {
+  const initialItems = () => {
     try {
       const cached = localStorage.getItem(cacheKey)
       if (cached) return JSON.parse(cached)
@@ -38,7 +38,17 @@ export function useCollection({ key, table, seed, fromRow, toRow, order, userId 
       /* ignore */
     }
     return cloud ? [] : seed
-  })
+  }
+
+  const [items, setItems] = useState(initialItems)
+
+  // Reset synchronously when the user (and thus cacheKey) changes, so the
+  // previous account's rows never linger in memory across a login/logout.
+  const [prevKey, setPrevKey] = useState(cacheKey)
+  if (prevKey !== cacheKey) {
+    setPrevKey(cacheKey)
+    setItems(initialItems())
+  }
 
   // Persist to cache on every change so reloads paint instantly.
   const write = useCallback(

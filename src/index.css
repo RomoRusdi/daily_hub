@@ -13,9 +13,10 @@
     min-height: 100dvh;
   }
 
-  /* Atmospheric backdrop: layered mesh gradient + vignette. This is what the
-     frosted glass actually blurs, so it needs depth — never a flat colour.
-     Light: lavender–peach mist with a peach glow rising from below. */
+  /* Atmospheric backdrop, base layer: linear gradient + vignette only. The
+     radial glows moved into the animated .glow-field blobs (BackdropGlow.jsx)
+     so the light can drift — this layer stays static beneath them.
+     Light: lavender–peach mist. */
   body::before {
     content: '';
     position: fixed;
@@ -23,21 +24,113 @@
     z-index: -1;
     background:
       radial-gradient(130% 130% at 50% 45%, transparent 62%, rgba(80, 60, 90, 0.1) 100%),
-      radial-gradient(110% 70% at 50% 112%, rgba(251, 146, 108, 0.5), transparent 55%),
-      radial-gradient(80% 55% at 12% 6%, rgba(139, 92, 246, 0.28), transparent 60%),
-      radial-gradient(65% 48% at 90% 12%, rgba(236, 72, 153, 0.18), transparent 60%),
       linear-gradient(165deg, #efe8fb 0%, #f4e8ef 48%, #fdf0e4 100%);
   }
 
-  /* Dark: warm charcoal with an ember glow from below, a small amber gleam
-     top-right, and a faint violet wash for depth. */
+  /* Dark: warm charcoal. */
   .dark body::before {
     background:
       radial-gradient(130% 130% at 50% 45%, transparent 60%, rgba(0, 0, 0, 0.28) 100%),
-      radial-gradient(120% 75% at 50% 112%, rgba(234, 88, 12, 0.42), transparent 55%),
-      radial-gradient(70% 45% at 86% 6%, rgba(245, 158, 11, 0.16), transparent 60%),
-      radial-gradient(90% 60% at 12% 18%, rgba(96, 84, 140, 0.22), transparent 62%),
       linear-gradient(165deg, #241d16 0%, #1a1613 48%, #110e0b 100%);
+  }
+
+  /* Floating glow field (see BackdropGlow.jsx). Paint order works out because
+     negative-z siblings draw in tree order: body::before (base, first) →
+     .glow-field (inside #root) → body::after (grain, last). The .glass
+     surfaces blur whatever is behind them, so they catch the drift for free.
+
+     Performance rules: only `transform` animates (compositor-only); blur and
+     gradients are static per blob. If a low-end device struggles, lower
+     --glow-blur or hide .glow-blob-3 — nothing else depends on them. */
+  .glow-field {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    --glow-blur: 34px;
+  }
+  .glow-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(var(--glow-blur));
+    will-change: transform;
+  }
+
+  /* Blob 1 — big glow rising from below (peach / ember). */
+  .glow-blob-1 {
+    width: 130vmin;
+    height: 90vmin;
+    left: 50%;
+    margin-left: -65vmin;
+    bottom: -52vmin;
+    background: radial-gradient(circle, rgba(251, 146, 108, 0.85), transparent 70%);
+    animation: drift1 20s ease-in-out infinite;
+  }
+  .dark .glow-blob-1 {
+    background: radial-gradient(circle, rgba(234, 88, 12, 0.75), transparent 70%);
+  }
+
+  /* Blob 2 — small gleam top-right (pink / amber). */
+  .glow-blob-2 {
+    width: 60vmin;
+    height: 60vmin;
+    top: -18vmin;
+    right: -18vmin;
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.55), transparent 70%);
+    animation: drift2 26s ease-in-out infinite;
+  }
+  .dark .glow-blob-2 {
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.6), transparent 70%);
+  }
+
+  /* Blob 3 — faint violet wash, left side. */
+  .glow-blob-3 {
+    width: 70vmin;
+    height: 70vmin;
+    top: 12%;
+    left: -26vmin;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.6), transparent 70%);
+    animation: drift3 23s ease-in-out infinite;
+  }
+  .dark .glow-blob-3 {
+    background: radial-gradient(circle, rgba(120, 100, 180, 0.55), transparent 70%);
+  }
+
+  /* Slow, small-amplitude drifts — "barely aware it moves". Full-screen field,
+     so ~45–55px reads as a gentle breath, not a spin. */
+  @keyframes drift1 {
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(48px, -54px);
+    }
+  }
+  @keyframes drift2 {
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(-54px, 44px);
+    }
+  }
+  @keyframes drift3 {
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(44px, 38px);
+    }
+  }
+
+  /* Battery saver — BackdropGlow.jsx toggles this class on <html> while the
+     tab is hidden (visibilitychange). */
+  .backdrop-paused .glow-blob {
+    animation-play-state: paused;
   }
 
   /* Single global grain layer so the gradients don't read as sterile digital
@@ -91,6 +184,12 @@
     *::after {
       transition-duration: 0.01ms !important;
       animation-duration: 0.01ms !important;
+    }
+    /* Infinite animations would restart every 0.01ms under the rule above —
+       kill the glow drift outright. The blobs stay visible, just static. */
+    .glow-blob {
+      animation: none !important;
+      will-change: auto;
     }
   }
 }

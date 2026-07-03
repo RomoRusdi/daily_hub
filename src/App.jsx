@@ -34,7 +34,9 @@ export default function App() {
     // pt-safe/px-safe keep content clear of the notch (portrait) and of the
     // rounded corners/notch in landscape; they add to the inner px-4/pt-3.
     <div className="pt-safe px-safe min-h-dvh">
-      <div className="mx-auto min-h-dvh max-w-app px-4 pb-[calc(7rem+var(--safe-bottom))] sm:max-w-xl">
+      {/* Bottom padding clears the floating pill nav: its offset
+          (max(safe,12px)) + pill height + breathing room. */}
+      <div className="mx-auto min-h-dvh max-w-app px-4 pb-[calc(max(var(--safe-bottom),0.75rem)+6.5rem)] sm:max-w-xl">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={location.pathname}

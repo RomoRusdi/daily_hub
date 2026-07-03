@@ -15,7 +15,9 @@ export default function FloatingActionButton({ onClick, label = 'Tambah', icon: 
   return createPortal(
     <div className="px-safe pointer-events-none fixed inset-x-0 bottom-0 z-40">
       <div className="mx-auto max-w-app px-4 sm:max-w-xl">
-        <div className="flex justify-end pb-[calc(4.75rem+var(--safe-bottom))]">
+        {/* Sits above the floating pill nav: its bottom offset
+            (max(safe,12px)) + pill height (~58px) + a small gap. */}
+        <div className="flex justify-end pb-[calc(max(var(--safe-bottom),0.75rem)+4.5rem)]">
           <motion.button
             type="button"
             onClick={onClick}
