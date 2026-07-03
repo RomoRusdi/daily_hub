@@ -17,9 +17,8 @@ function subtitleFor(task) {
  *
  * @param {'badge'|'dot'|'none'} [indicator] how to flag urgent (high) tasks
  * @param {fn} [onDelete] when provided, a trash button appears on hover
- * @param {number} [index] position in the list, used for stagger delay
  */
-export default function TaskRow({ task, onToggle, onDelete, indicator = 'dot', index = 0 }) {
+export default function TaskRow({ task, onToggle, onDelete, indicator = 'dot' }) {
   const urgent = task.priority === 'high' && !task.done
   const subtitle = subtitleFor(task)
 
@@ -30,7 +29,6 @@ export default function TaskRow({ task, onToggle, onDelete, indicator = 'dot', i
       initial="initial"
       animate="animate"
       exit="exit"
-      custom={index}
       className="group flex items-center gap-3 py-2.5"
     >
       <Checkbox

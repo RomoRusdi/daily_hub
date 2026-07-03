@@ -9,22 +9,24 @@ export default {
         // consumed via the `dark:` variant in components.
         bg: {
           DEFAULT: '#FAFAFA',
-          dark: '#0A0A0A',
+          dark: '#1A1613', // warm charcoal, matches the atmospheric backdrop
         },
         surface: {
           DEFAULT: '#FFFFFF',
-          dark: '#141414',
+          dark: '#26221B', // clearly lighter than bg → real elevation
         },
         line: {
           DEFAULT: '#EAEAEA',
-          dark: '#262626',
+          dark: '#3A322A',
         },
         ink: {
           DEFAULT: '#1A1A1A', // primary text
-          dark: '#F5F5F5',
+          dark: '#F4EFE7', // warm off-white
         },
-        subtle: '#6B7280', // secondary text
-        muted: '#9CA3AF', // muted text
+        // Secondary text reads CSS vars (see index.css) so it swaps to warm
+        // greys in dark mode without per-component `dark:` classes.
+        subtle: 'var(--text-subtle)',
+        muted: 'var(--text-muted)',
         accent: '#D97706', // amber — reserved for urgent / today
       },
       fontFamily: {

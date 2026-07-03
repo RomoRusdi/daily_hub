@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { ChevronLeft, ChevronRight, MapPin, Trash2, CalendarDays } from 'lucide-react'
 import Header from '../components/Header'
 import Card from '../components/Card'
+import Reveal from '../components/Reveal'
 import EmptyState from '../components/EmptyState'
 import FloatingActionButton from '../components/FloatingActionButton'
 import AddEventModal from '../components/AddEventModal'
@@ -77,6 +78,7 @@ export default function Calendar() {
       </div>
 
       {/* Month grid */}
+      <Reveal>
       <Card className="mb-6 p-3">
         <div className="mb-1 grid grid-cols-7">
           {WEEKDAYS_SHORT.map((d) => (
@@ -126,6 +128,7 @@ export default function Calendar() {
           })}
         </div>
       </Card>
+      </Reveal>
 
       {/* Agenda for the selected day */}
       <div className="mb-2 flex items-baseline justify-between px-1">
@@ -145,8 +148,9 @@ export default function Calendar() {
         />
       ) : (
         <div className="pl-1">
-          {selectedEvents.map((ev) => (
-            <div key={ev.id} className="group flex gap-3">
+          {selectedEvents.map((ev, i) => (
+            <Reveal key={ev.id} delay={Math.min(i * 0.06, 0.24)} y={14}>
+            <div className="group flex gap-3">
               {/* Time rail + timeline */}
               <div className="flex w-12 shrink-0 flex-col items-end pt-0.5 text-right">
                 <span className="text-sm font-semibold leading-none">
@@ -168,6 +172,7 @@ export default function Calendar() {
 
               {/* Event card */}
               <Card
+                lite
                 className={
                   'mb-3 flex flex-1 items-center gap-3 p-3 ' +
                   (ev.accent ? 'border-l-2 border-l-accent' : '')
@@ -191,6 +196,7 @@ export default function Calendar() {
                 </button>
               </Card>
             </div>
+            </Reveal>
           ))}
         </div>
       )}

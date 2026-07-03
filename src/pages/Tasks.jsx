@@ -3,6 +3,7 @@ import { AnimatePresence } from 'framer-motion'
 import { CheckCheck, Search, SlidersHorizontal } from 'lucide-react'
 import Header from '../components/Header'
 import Card from '../components/Card'
+import Reveal from '../components/Reveal'
 import TaskRow from '../components/TaskRow'
 import EmptyState from '../components/EmptyState'
 import FloatingActionButton from '../components/FloatingActionButton'
@@ -24,21 +25,21 @@ function GroupLabel({ children, count }) {
   )
 }
 
-function TaskGroup({ label, items, ...handlers }) {
+function TaskGroup({ label, items, delay = 0, ...handlers }) {
   if (items.length === 0) return null
   return (
-    <>
+    <Reveal delay={delay}>
       <GroupLabel count={items.length}>{label}</GroupLabel>
-      <Card className="px-4 py-1">
+      <Card lite className="px-4 py-1">
         <div className="divide-y divide-ink/5 dark:divide-white/10">
           <AnimatePresence initial={false}>
-            {items.map((t, i) => (
-              <TaskRow key={t.id} task={t} index={i} {...handlers} />
+            {items.map((t) => (
+              <TaskRow key={t.id} task={t} {...handlers} />
             ))}
           </AnimatePresence>
         </div>
       </Card>
-    </>
+    </Reveal>
   )
 }
 
@@ -124,10 +125,10 @@ export default function Tasks() {
         />
       ) : (
         <>
-          <TaskGroup label="Hari ini" items={todayList} {...handlers} />
-          <TaskGroup label="Mendatang" items={upcomingList} {...handlers} />
+          <TaskGroup label="Hari ini" items={todayList} delay={0} {...handlers} />
+          <TaskGroup label="Mendatang" items={upcomingList} delay={0.08} {...handlers} />
           {!hideCompleted && (
-            <TaskGroup label="Selesai" items={doneList} {...handlers} />
+            <TaskGroup label="Selesai" items={doneList} delay={0.16} {...handlers} />
           )}
           {todayList.length === 0 &&
             upcomingList.length === 0 &&

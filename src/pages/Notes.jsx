@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { StickyNote, Trash2, Search } from 'lucide-react'
 import Header from '../components/Header'
 import Card from '../components/Card'
+import Reveal from '../components/Reveal'
 import EmptyState from '../components/EmptyState'
 import FloatingActionButton from '../components/FloatingActionButton'
 import Button from '../components/Button'
@@ -75,10 +76,11 @@ export default function Notes() {
         </p>
       ) : (
         <div className="grid grid-cols-2 gap-3">
-          {visible.map((note) => (
+          {visible.map((note, i) => (
+            <Reveal key={note.id} delay={Math.min(i * 0.06, 0.3)} y={16}>
             <Card
-              key={note.id}
-              className="group relative flex cursor-pointer flex-col p-3.5 transition-colors hover:border-subtle"
+              lite
+              className="group relative flex h-full cursor-pointer flex-col p-3.5 transition-colors hover:border-subtle"
               onClick={() => navigate(`/notes/${note.id}`)}
             >
               <p className="line-clamp-1 text-sm font-medium">
@@ -102,6 +104,7 @@ export default function Notes() {
                 <Trash2 size={15} />
               </button>
             </Card>
+            </Reveal>
           ))}
         </div>
       )}

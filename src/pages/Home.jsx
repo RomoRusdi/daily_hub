@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { ChevronRight, MapPin, CalendarClock, Plus } from 'lucide-react'
 import Header from '../components/Header'
 import Card from '../components/Card'
+import Reveal from '../components/Reveal'
 import AIPrompt from '../components/AIPrompt'
 import TaskRow from '../components/TaskRow'
 import ProgressRing from '../components/ProgressRing'
@@ -85,11 +86,12 @@ export default function Home() {
       <Header />
 
       {/* AI assistant — hero input */}
-      <div className="mb-5">
+      <Reveal className="mb-5">
         <AIPrompt />
-      </div>
+      </Reveal>
 
       {/* Today summary */}
+      <Reveal delay={0.07}>
       <Card className="mb-6 p-4">
         <div className="flex items-center gap-4">
           <ProgressRing value={progress} size={64} />
@@ -109,9 +111,11 @@ export default function Home() {
           </span>
         </div>
       </Card>
+      </Reveal>
 
       {/* Today's tasks */}
-      <section className="mb-6">
+      <Reveal delay={0.14} className="mb-6">
+      <section>
         <SectionTitle to="/tasks">Tugas hari ini</SectionTitle>
         <Card className="px-4 py-1">
           {todaysTasks.length === 0 ? (
@@ -121,11 +125,10 @@ export default function Home() {
           ) : (
             <div className="divide-y divide-ink/5 dark:divide-white/10">
               <AnimatePresence initial={false}>
-                {todaysTasks.slice(0, 5).map((task, i) => (
+                {todaysTasks.slice(0, 5).map((task) => (
                   <TaskRow
                     key={task.id}
                     task={task}
-                    index={i}
                     onToggle={toggleTask}
                     indicator="badge"
                   />
@@ -135,9 +138,11 @@ export default function Home() {
           )}
         </Card>
       </section>
+      </Reveal>
 
       {/* Next up */}
-      <section className="mb-6">
+      <Reveal delay={0.2} className="mb-6">
+      <section>
         <SectionTitle to="/calendar">Jadwal berikutnya</SectionTitle>
         <div className="space-y-2">
           {upcoming.slice(0, 2).map((ev) => (
@@ -165,9 +170,11 @@ export default function Home() {
           )}
         </div>
       </section>
+      </Reveal>
 
       {/* Quick note */}
-      <section className="mb-4">
+      <Reveal delay={0.26} className="mb-4">
+      <section>
         <SectionTitle to="/notes">Catatan cepat</SectionTitle>
         <Card className="p-3">
           <form onSubmit={saveQuickNote} className="space-y-3">
@@ -192,6 +199,7 @@ export default function Home() {
           </form>
         </Card>
       </section>
+      </Reveal>
     </div>
   )
 }

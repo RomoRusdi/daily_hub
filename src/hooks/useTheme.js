@@ -14,7 +14,7 @@ export function useTheme() {
     document.documentElement.classList.toggle('dark', isDark)
     document
       .querySelector('meta[name="theme-color"]')
-      ?.setAttribute('content', isDark ? '#0C0A09' : '#ECE7F8')
+      ?.setAttribute('content', isDark ? '#1A1613' : '#EFE8FB')
   }, [])
 
   // Apply on mount + whenever the stored choice changes.
