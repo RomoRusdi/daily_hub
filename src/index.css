@@ -176,6 +176,20 @@
     --text-muted: #78716c;
   }
 
+  /* iOS Safari auto-zooms the page when a focused form control's font-size
+     is under 16px — and it never zooms back out by itself. Forcing ≥16px on
+     touch devices kills the zoom at the source (the accessible fix — unlike
+     maximum-scale=1, which blocks pinch zoom on Android). max(…, 1em) keeps
+     any control that is intentionally larger. !important beats the various
+     text-sm/text-[15px] utility classes on the controls. */
+  @media (pointer: coarse) {
+    input,
+    select,
+    textarea {
+      font-size: max(1rem, 1em) !important;
+    }
+  }
+
   /* Reduced motion: collapse CSS transitions/animations to near-instant.
      framer-motion animations are handled by <MotionConfig reducedMotion>. */
   @media (prefers-reduced-motion: reduce) {
