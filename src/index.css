@@ -190,6 +190,26 @@
     }
   }
 
+  /* iOS-only (@supports -webkit-touch-callout matches just iOS Safari):
+     date/time inputs render as native buttons there — intrinsic width that
+     ignores the grid column, value text centered, and the whole control
+     collapses when empty. Strip the native chrome so they behave like the
+     other text inputs. Desktop/Android are untouched. */
+  @supports (-webkit-touch-callout: none) {
+    input[type='date'],
+    input[type='time'] {
+      -webkit-appearance: none;
+      appearance: none;
+      min-width: 0;
+    }
+    input[type='date']::-webkit-date-and-time-value,
+    input[type='time']::-webkit-date-and-time-value {
+      margin: 0;
+      text-align: left;
+      min-height: 1.25em; /* keeps the field's height when the value is empty */
+    }
+  }
+
   /* Reduced motion: collapse CSS transitions/animations to near-instant.
      framer-motion animations are handled by <MotionConfig reducedMotion>. */
   @media (prefers-reduced-motion: reduce) {
