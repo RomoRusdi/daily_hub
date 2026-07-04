@@ -21,11 +21,13 @@ export default function AIPrompt() {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="glass flex items-center gap-2 rounded-2xl px-3.5 py-3"
-    >
-      <Sparkles size={18} strokeWidth={1.75} className="shrink-0 text-brand" />
+    // Gradient halo ring + glow around the glass form (see .ai-halo).
+    <div className="ai-halo rounded-2xl">
+      <form
+        onSubmit={handleSubmit}
+        className="glass flex items-center gap-2 rounded-[calc(1rem-1.5px)] border-0 px-3.5 py-3"
+      >
+        <Sparkles size={18} strokeWidth={1.75} className="shrink-0 text-brand" />
       <input
         value={value}
         onChange={(e) => setValue(e.target.value)}
@@ -38,9 +40,10 @@ export default function AIPrompt() {
         aria-label="Kirim"
         disabled={!value.trim()}
         className="bg-brand flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-opacity disabled:opacity-30"
-      >
-        <ArrowUp size={16} strokeWidth={2.25} />
-      </button>
-    </form>
+        >
+          <ArrowUp size={16} strokeWidth={2.25} />
+        </button>
+      </form>
+    </div>
   )
 }

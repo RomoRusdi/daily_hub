@@ -13,12 +13,12 @@ function subtitleFor(task) {
 
 /**
  * A single task row: circular checkbox + title + optional subtitle.
- * Shared between Home and the Tasks page.
+ * Shared between Home and the Tasks page. Urgent (high-priority) tasks get
+ * a tinted "Penting" chip.
  *
- * @param {'badge'|'dot'|'none'} [indicator] how to flag urgent (high) tasks
  * @param {fn} [onDelete] when provided, a trash button appears on hover
  */
-export default function TaskRow({ task, onToggle, onDelete, indicator = 'dot' }) {
+export default function TaskRow({ task, onToggle, onDelete }) {
   const urgent = task.priority === 'high' && !task.done
   const subtitle = subtitleFor(task)
 
@@ -55,13 +55,10 @@ export default function TaskRow({ task, onToggle, onDelete, indicator = 'dot' })
         )}
       </div>
 
-      {urgent && indicator === 'badge' && (
+      {urgent && (
         <span className="shrink-0 rounded-full bg-accent/10 px-2 py-0.5 text-[11px] font-medium text-accent">
-          Urgent
+          Penting
         </span>
-      )}
-      {urgent && indicator === 'dot' && (
-        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent group-hover:hidden" />
       )}
 
       {onDelete && (

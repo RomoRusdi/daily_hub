@@ -151,9 +151,9 @@ export default function Calendar() {
           {selectedEvents.map((ev, i) => (
             <Reveal key={ev.id} delay={Math.min(i * 0.06, 0.24)} y={14}>
             <div className="group flex gap-3">
-              {/* Time rail + timeline */}
-              <div className="flex w-12 shrink-0 flex-col items-end pt-0.5 text-right">
-                <span className="text-sm font-semibold leading-none">
+              {/* Time rail + timeline — brand-tinted chip (Ember Glow). */}
+              <div className="bg-brand-soft flex h-fit w-14 shrink-0 flex-col items-center rounded-xl py-2">
+                <span className="text-brand text-sm font-semibold leading-none">
                   {ev.time || '—'}
                 </span>
                 {ev.duration && (

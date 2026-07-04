@@ -75,18 +75,25 @@ export default function Notes() {
           Tidak ada catatan yang cocok.
         </p>
       ) : (
-        <div className="grid grid-cols-2 gap-3">
+        // Masonry-ish: CSS columns let cards keep their natural height so
+        // the two lanes stagger instead of padding to equal rows.
+        <div className="columns-2 gap-3">
           {visible.map((note, i) => (
-            <Reveal key={note.id} delay={Math.min(i * 0.06, 0.3)} y={16}>
+            <Reveal
+              key={note.id}
+              delay={Math.min(i * 0.06, 0.3)}
+              y={16}
+              className="mb-3 break-inside-avoid"
+            >
             <Card
               lite
-              className="group relative flex h-full cursor-pointer flex-col p-3.5 transition-colors hover:border-subtle"
+              className="group relative flex cursor-pointer flex-col p-3.5 transition-colors hover:border-subtle"
               onClick={() => navigate(`/notes/${note.id}`)}
             >
               <p className="line-clamp-1 text-sm font-medium">
                 {note.title || 'Tanpa judul'}
               </p>
-              <p className="mt-1 line-clamp-4 whitespace-pre-wrap text-xs leading-relaxed text-subtle">
+              <p className="mt-1 line-clamp-6 whitespace-pre-wrap text-xs leading-relaxed text-subtle">
                 {note.body || 'Catatan kosong'}
               </p>
               <span className="mt-3 text-[11px] text-muted">

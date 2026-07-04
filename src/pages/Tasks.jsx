@@ -70,7 +70,7 @@ export default function Tasks() {
   const noTasksAtAll = tasks.length === 0
   const allDoneToday = !noTasksAtAll && todayList.length === 0 && upcomingList.length === 0
 
-  const handlers = { onToggle: toggleTask, onDelete: removeTask, indicator: 'dot' }
+  const handlers = { onToggle: toggleTask, onDelete: removeTask }
 
   return (
     <div>

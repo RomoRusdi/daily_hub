@@ -31,11 +31,14 @@ function SectionTitle({ children, to }) {
   )
 }
 
-// Left "rail" of an event card: big time + small duration.
+// Left "rail" of an event card: big time + small duration, brand-tinted so
+// the timeline reads as a rail of glowing time chips (Ember Glow mockup).
 function EventRail({ time, duration }) {
   return (
-    <div className="flex w-14 shrink-0 flex-col items-center justify-center rounded-xl bg-white/40 py-2 dark:bg-white/5">
-      <span className="text-sm font-semibold leading-none">{time || '—'}</span>
+    <div className="bg-brand-soft flex w-14 shrink-0 flex-col items-center justify-center rounded-xl py-2">
+      <span className="text-brand text-sm font-semibold leading-none">
+        {time || '—'}
+      </span>
       {duration && (
         <span className="mt-1 text-[10px] text-muted">{duration}</span>
       )}
@@ -90,25 +93,46 @@ export default function Home() {
         <AIPrompt />
       </Reveal>
 
-      {/* Today summary */}
+      {/* Today summary + next event, merged into one card (mockup 1b):
+          progress on the left, next-event tile on the right. */}
       <Reveal delay={0.07}>
-      <Card className="mb-6 p-4">
-        <div className="flex items-center gap-4">
-          <ProgressRing value={progress} size={64} />
-          <div className="flex-1">
-            <p className="text-xs text-subtle">Tugas tersisa</p>
-            <p className="text-lg font-semibold leading-tight">
-              {remaining.length} dari {todaysTasks.length}
-            </p>
+      <Card className="mb-6 p-3">
+        <div className="flex items-stretch gap-3">
+          <div className="flex shrink-0 items-center gap-3 py-1 pl-1">
+            <ProgressRing value={progress} size={52} />
+            <div>
+              <p className="text-lg font-semibold leading-tight">
+                {remaining.length}
+                <span className="text-sm font-normal text-muted">
+                  {' '}/ {todaysTasks.length}
+                </span>
+              </p>
+              <p className="text-xs text-subtle">tugas tersisa</p>
+            </div>
           </div>
-        </div>
-        <div className="mt-3 flex items-center justify-between border-t border-ink/10 pt-3 text-sm dark:border-white/10">
-          <span className="inline-flex items-center gap-1.5 text-subtle">
-            <CalendarClock size={15} strokeWidth={1.75} /> Acara berikutnya
-          </span>
-          <span className="font-medium">
-            {nextEvent ? nextEvent.time || '—' : 'Tidak ada'}
-          </span>
+          <div className="min-w-0 flex-1 rounded-xl bg-white/40 p-2.5 dark:bg-white/5">
+            <p className="flex items-center gap-1.5 text-[11px] text-subtle">
+              <CalendarClock size={13} strokeWidth={1.75} className="shrink-0" />
+              Berikutnya
+              {nextEvent?.time && (
+                <span className="text-brand font-semibold">· {nextEvent.time}</span>
+              )}
+            </p>
+            {nextEvent ? (
+              <>
+                <p className="mt-1 truncate text-sm font-medium">
+                  {nextEvent.title}
+                </p>
+                {nextEvent.location && (
+                  <p className="mt-0.5 truncate text-[11px] text-muted">
+                    {nextEvent.location}
+                  </p>
+                )}
+              </>
+            ) : (
+              <p className="mt-1 text-sm text-muted">Tidak ada acara</p>
+            )}
+          </div>
         </div>
       </Card>
       </Reveal>
@@ -126,12 +150,7 @@ export default function Home() {
             <div className="divide-y divide-ink/5 dark:divide-white/10">
               <AnimatePresence initial={false}>
                 {todaysTasks.slice(0, 5).map((task) => (
-                  <TaskRow
-                    key={task.id}
-                    task={task}
-                    onToggle={toggleTask}
-                    indicator="badge"
-                  />
+                  <TaskRow key={task.id} task={task} onToggle={toggleTask} />
                 ))}
               </AnimatePresence>
             </div>

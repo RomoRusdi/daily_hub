@@ -287,6 +287,20 @@
     border-color: rgba(255, 255, 255, 0.12);
   }
 
+  /* Gradient halo for the hero AI prompt: a thin brand-gradient ring (the
+     wrapper's own background peeking out around the glass form inside) plus
+     a soft brand glow underneath. */
+  .ai-halo {
+    padding: 1.5px;
+    background: linear-gradient(
+      120deg,
+      color-mix(in srgb, var(--brand-from) 70%, transparent),
+      color-mix(in srgb, var(--brand-to) 45%, transparent) 55%,
+      color-mix(in srgb, var(--brand-from) 70%, transparent)
+    );
+    box-shadow: 0 10px 32px -12px color-mix(in srgb, var(--brand) 55%, transparent);
+  }
+
   /* Brand helpers. */
   .bg-brand {
     background-image: linear-gradient(135deg, var(--brand-from), var(--brand-to));

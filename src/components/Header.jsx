@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { LogOut } from 'lucide-react'
+import { LogOut, Sparkles } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
 import { useAuth } from '../store/AuthContext'
 import { greeting, headerDate } from '../utils/date'
@@ -64,10 +64,16 @@ export default function Header({ name = 'Arya', title, showDate = true, action }
   return (
     <header className="flex items-start justify-between gap-3 pb-5 pt-3">
       <div className="min-w-0">
-        <h1 className="truncate text-2xl font-semibold tracking-tight">
+        <h1 className="text-2xl font-semibold tracking-tight">
           {title ?? (
             <>
-              {greeting()}, <span className="capitalize">{displayName}</span>
+              <span className="block truncate">{greeting()},</span>
+              {/* Brand-coloured name + sparkle — the "brand moment" from the
+                  Ember Glow mockup. */}
+              <span className="text-brand flex items-center gap-1.5">
+                <span className="truncate capitalize">{displayName}</span>
+                <Sparkles size={17} strokeWidth={2} className="shrink-0" />
+              </span>
             </>
           )}
         </h1>

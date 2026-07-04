@@ -41,7 +41,12 @@ export default function BottomNav() {
               className="group flex flex-1 justify-center"
             >
               {({ isActive }) => (
-                <span className="relative flex h-11 w-16 items-center justify-center">
+                <span
+                  className={
+                    'relative flex h-11 items-center justify-center ' +
+                    (isActive ? 'gap-1.5 px-4' : 'w-16')
+                  }
+                >
                   {isActive && (
                     <motion.span
                       layoutId="nav-pill"
@@ -59,7 +64,19 @@ export default function BottomNav() {
                         : 'text-muted group-hover:text-subtle')
                     }
                   />
-                  <span className="sr-only">{label}</span>
+                  {/* Active tab shows its label inside the highlight; inactive
+                      tabs stay icon-only with an sr-only name. */}
+                  {isActive ? (
+                    <motion.span
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1, transition: { delay: 0.1 } }}
+                      className="text-brand relative text-xs font-medium"
+                    >
+                      {label}
+                    </motion.span>
+                  ) : (
+                    <span className="sr-only">{label}</span>
+                  )}
                 </span>
               )}
             </NavLink>
