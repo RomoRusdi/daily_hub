@@ -4,11 +4,15 @@ import Modal from './Modal'
 import Button from './Button'
 import { todayKey } from '../utils/date'
 
+// Reminder = minute offset before the task's time (null = off). Stored as a
+// number so the backend can compute an exact remind_at timestamp.
 const REMINDERS = [
-  'Tidak ada',
-  '10 menit sebelum',
-  '30 menit sebelum',
-  '1 jam sebelum',
+  { value: '', label: 'Tidak ada' },
+  { value: '0', label: 'Saat waktunya' },
+  { value: '10', label: '10 menit sebelum' },
+  { value: '30', label: '30 menit sebelum' },
+  { value: '60', label: '1 jam sebelum' },
+  { value: '1440', label: '1 hari sebelum' },
 ]
 
 // A settings-style row: leading icon + label on the left, control on the right.
@@ -28,25 +32,30 @@ export default function AddTaskModal({ open, onClose, onSubmit, defaultDate }) {
   const [date, setDate] = useState(defaultDate || todayKey())
   const [time, setTime] = useState('')
   const [priority, setPriority] = useState('normal')
-  const [reminder, setReminder] = useState('Tidak ada')
+  const [reminder, setReminder] = useState('')
+
+  // A reminder needs a time to anchor to ("10 menit sebelum" what?), so the
+  // form requires a time whenever a reminder is chosen.
+  const reminderNeedsTime = reminder !== '' && !time
+  const canSubmit = title.trim() && !reminderNeedsTime
 
   const reset = () => {
     setTitle('')
     setDate(defaultDate || todayKey())
     setTime('')
     setPriority('normal')
-    setReminder('Tidak ada')
+    setReminder('')
   }
 
   const submit = (e) => {
     e.preventDefault()
-    if (!title.trim()) return
+    if (!canSubmit) return
     onSubmit({
       title,
       date,
       time,
       priority,
-      reminder: reminder === 'Tidak ada' ? '' : reminder,
+      reminderMinutes: reminder === '' ? null : Number(reminder),
     })
     reset()
     onClose()
@@ -114,16 +123,22 @@ export default function AddTaskModal({ open, onClose, onSubmit, defaultDate }) {
               className={`${bareInput} text-right text-subtle`}
             >
               {REMINDERS.map((r) => (
-                <option key={r} value={r}>
-                  {r}
+                <option key={r.value} value={r.value}>
+                  {r.label}
                 </option>
               ))}
             </select>
           </Row>
         </div>
 
+        {reminderNeedsTime && (
+          <p className="pt-2 text-xs text-accent">
+            Isi waktu dulu supaya reminder tahu kapan harus mengingatkan.
+          </p>
+        )}
+
         <div className="pt-4">
-          <Button type="submit" className="w-full" disabled={!title.trim()}>
+          <Button type="submit" className="w-full" disabled={!canSubmit}>
             + Tambah tugas
           </Button>
         </div>

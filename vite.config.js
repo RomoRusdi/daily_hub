@@ -22,6 +22,12 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
+      workbox: {
+        // Web Push handlers (push + notificationclick) hidup di file terpisah
+        // dan di-import ke SW hasil generateSW — cara paling kecil untuk
+        // menambah kode custom tanpa pindah ke injectManifest.
+        importScripts: ['push-sw.js'],
+      },
       manifest: {
         name: 'Hub',
         short_name: 'Hub',

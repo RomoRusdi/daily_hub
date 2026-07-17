@@ -1,12 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
-import { LogOut, Sparkles } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { LogOut, Settings as SettingsIcon, Sparkles } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
 import { useAuth } from '../store/AuthContext'
 import { greeting, headerDate } from '../utils/date'
 
-// Avatar button that opens an account menu when signed in (cloud mode).
+// Avatar button: opens an account menu when signed in (cloud mode), or goes
+// straight to Settings in local mode.
 function AccountButton({ fallbackInitial }) {
   const { configured, user, username, signOut } = useAuth()
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
 
@@ -26,7 +29,7 @@ function AccountButton({ fallbackInitial }) {
       <button
         type="button"
         aria-label="Akun"
-        onClick={() => canManage && setOpen((o) => !o)}
+        onClick={() => (canManage ? setOpen((o) => !o) : navigate('/settings'))}
         className="glass flex h-9 w-9 items-center justify-center rounded-xl text-sm font-medium text-ink dark:text-ink-dark"
       >
         {initial}
@@ -40,6 +43,16 @@ function AccountButton({ fallbackInitial }) {
               {username}
             </p>
           </div>
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false)
+              navigate('/settings')
+            }}
+            className="flex w-full items-center gap-2 px-3 py-2.5 text-sm text-subtle hover:bg-white/40 hover:text-ink dark:hover:bg-white/10 dark:hover:text-ink-dark"
+          >
+            <SettingsIcon size={16} /> Pengaturan
+          </button>
           <button
             type="button"
             onClick={signOut}

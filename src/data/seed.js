@@ -21,7 +21,7 @@ export const seedTasks = [
     time: '09:00',
     priority: 'high', // high | normal
     deadline: true,
-    reminder: '10 menit sebelum',
+    reminderMinutes: 10,
     done: false,
   },
   {
@@ -30,7 +30,7 @@ export const seedTasks = [
     date: dateKey(0),
     time: '11:30',
     priority: 'normal',
-    reminder: '',
+    reminderMinutes: null,
     done: false,
   },
   {
@@ -39,7 +39,7 @@ export const seedTasks = [
     date: dateKey(0),
     time: '',
     priority: 'normal',
-    reminder: '',
+    reminderMinutes: null,
     done: false,
   },
   {
@@ -48,7 +48,7 @@ export const seedTasks = [
     date: dateKey(1),
     time: '14:00',
     priority: 'high',
-    reminder: '1 jam sebelum',
+    reminderMinutes: 60,
     done: false,
   },
   {
@@ -57,7 +57,7 @@ export const seedTasks = [
     date: dateKey(2),
     time: '',
     priority: 'normal',
-    reminder: '',
+    reminderMinutes: null,
     done: false,
   },
   {
@@ -66,7 +66,7 @@ export const seedTasks = [
     date: dateKey(0),
     time: '08:30',
     priority: 'normal',
-    reminder: '',
+    reminderMinutes: null,
     done: true,
   },
   {
@@ -75,7 +75,7 @@ export const seedTasks = [
     date: dateKey(-1),
     time: '',
     priority: 'normal',
-    reminder: '',
+    reminderMinutes: null,
     done: true,
   },
 ]

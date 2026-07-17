@@ -23,7 +23,9 @@ const tasksToRow = (t, userId) => {
   if ('date' in t) r.due_date = t.date
   if ('time' in t) r.due_time = t.time
   if ('priority' in t) r.priority = t.priority
-  if ('reminder' in t) r.reminder = t.reminder
+  if ('reminderMinutes' in t) r.reminder_minutes = t.reminderMinutes
+  if ('remindAt' in t) r.remind_at = t.remindAt
+  if ('reminderSent' in t) r.reminder_sent = t.reminderSent
   if ('deadline' in t) r.deadline = t.deadline
   if ('done' in t) r.done = t.done
   if (userId) r.user_id = userId
@@ -35,10 +37,22 @@ const tasksFromRow = (r) => ({
   date: r.due_date,
   time: r.due_time || '',
   priority: r.priority || 'normal',
-  reminder: r.reminder || '',
+  reminderMinutes: r.reminder_minutes ?? null,
+  remindAt: r.remind_at || null,
+  reminderSent: !!r.reminder_sent,
   deadline: !!r.deadline,
   done: !!r.done,
 })
+
+// Exact moment to notify: (date + time) − reminderMinutes, in the device's
+// timezone, as an ISO string for the timestamptz column. Requires a time —
+// the modal enforces that whenever a reminder is set.
+function computeRemindAt(date, time, reminderMinutes) {
+  if (reminderMinutes == null || !date || !time) return null
+  const due = new Date(`${date}T${time}:00`)
+  if (Number.isNaN(due.getTime())) return null
+  return new Date(due.getTime() - reminderMinutes * 60_000).toISOString()
+}
 
 const eventsToRow = (e, userId) => {
   const r = {}
@@ -122,14 +136,16 @@ export function DataProvider({ children }) {
       notes: notesCol.items,
 
       // ---- Tasks ----
-      addTask: ({ title, date, time = '', priority = 'normal', reminder = '' }) =>
+      addTask: ({ title, date, time = '', priority = 'normal', reminderMinutes = null }) =>
         tasksCol.insert({
           id: newId(),
           title: title.trim(),
           date,
           time,
           priority,
-          reminder,
+          reminderMinutes,
+          remindAt: computeRemindAt(date, time, reminderMinutes),
+          reminderSent: false,
           deadline: priority === 'high' && !!time,
           done: false,
         }),

@@ -1,5 +1,8 @@
 -- ============================================================================
--- Hub — Supabase schema v2 (PER-USER + RLS ketat)
+-- Hub — Supabase schema v3 (PER-USER + RLS ketat + Web Push reminder)
+--
+-- Baru di v3: kolom reminder terjadwal di `tasks` (reminder_minutes,
+-- remind_at, reminder_sent) + tabel `push_subscriptions` untuk Web Push.
 --
 -- Model keamanan: setiap baris dimiliki satu user (kolom user_id, default
 -- auth.uid()). Policy hanya untuk role `authenticated` — role `anon` TIDAK
@@ -22,6 +25,7 @@
 drop table if exists public.tasks  cascade;
 drop table if exists public.events cascade;
 drop table if exists public.notes  cascade;
+drop table if exists public.push_subscriptions cascade;
 
 -- ---------------------------------------------------------------------------
 -- Tables — user_id default auth.uid(): insert dari client yang login otomatis
@@ -34,7 +38,12 @@ create table public.tasks (
   due_date   text,               -- 'YYYY-MM-DD'
   due_time   text default '',    -- 'HH:MM'
   priority   text default 'normal',
-  reminder   text default '',
+  -- Reminder: offset menit sebelum due (null = tanpa reminder), waktu pasti
+  -- notifikasi (dihitung client dari due_date+due_time − offset), dan penanda
+  -- agar Edge Function `send-reminders` tidak mengirim dua kali.
+  reminder_minutes integer,
+  remind_at        timestamptz,
+  reminder_sent    boolean not null default false,
   deadline   boolean default false,
   done       boolean default false,
   created_at timestamptz default now()
@@ -60,9 +69,24 @@ create table public.notes (
   updated_at timestamptz default now()
 );
 
+-- Langganan Web Push per device. Satu user bisa punya beberapa (iPhone,
+-- laptop, …); `endpoint` unik jadi subscribe ulang = upsert, bukan duplikat.
+create table public.push_subscriptions (
+  id           uuid primary key default gen_random_uuid(),
+  user_id      uuid not null default auth.uid() references auth.users (id) on delete cascade,
+  endpoint     text not null unique,
+  subscription jsonb not null,   -- objek PushSubscription utuh (keys p256dh/auth)
+  created_at   timestamptz default now()
+);
+
 create index if not exists tasks_user_idx  on public.tasks  (user_id);
 create index if not exists events_user_idx on public.events (user_id);
 create index if not exists notes_user_idx  on public.notes  (user_id);
+create index if not exists push_subs_user_idx on public.push_subscriptions (user_id);
+
+-- Query jatuh-tempo Edge Function: hanya baris yang belum terkirim.
+create index if not exists tasks_remind_due_idx
+  on public.tasks (remind_at) where reminder_sent = false;
 
 -- ---------------------------------------------------------------------------
 -- Row Level Security — HANYA role `authenticated`, dan hanya baris miliknya.
@@ -71,6 +95,7 @@ create index if not exists notes_user_idx  on public.notes  (user_id);
 alter table public.tasks  enable row level security;
 alter table public.events enable row level security;
 alter table public.notes  enable row level security;
+alter table public.push_subscriptions enable row level security;
 
 create policy "own tasks" on public.tasks
   for all to authenticated
@@ -81,6 +106,12 @@ create policy "own events" on public.events
   using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 create policy "own notes" on public.notes
+  for all to authenticated
+  using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+-- Edge Function membaca tabel ini lewat service role (bypass RLS); client
+-- hanya bisa mengelola langganan miliknya sendiri.
+create policy "own push subscriptions" on public.push_subscriptions
   for all to authenticated
   using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
