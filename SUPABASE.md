@@ -113,7 +113,25 @@ Debug: Dashboard → Edge Functions → send-reminders → Logs; atau panggil
 manual dengan `curl -X POST <url> -H "x-cron-secret: <CRON_SECRET>"` dan
 lihat respons `{ due, sent, pruned }`.
 
-## Langkah AI berikutnya (opsional)
-Buat **Supabase Edge Function** sebagai proxy penyimpan Claude API key (jangan
-di frontend). Handler `AIPrompt` tinggal memanggil function itu. Lihat titik
-`// TODO: AI integration`.
+## Asisten AI (hero prompt di Home)
+
+Arsitektur: AIPrompt → Edge Function [`ai-assistant`](supabase/functions/ai-assistant/index.ts)
+(API key Claude aman di server, verify_jwt aktif → hanya user login) → Claude
+mem-parse niat → mengembalikan jawaban + aksi terstruktur → app mengeksekusi
+aksi (buat tugas/acara/catatan) lewat DataContext biasa, jadi RLS tetap
+berlaku. Bisa juga menjawab pertanyaan ("jadwalku besok apa?") dari snapshot
+data yang dikirim app.
+
+Model: Google **Gemini Flash** — free tier, tanpa kartu kredit.
+
+Setup sekali:
+1. Buka <https://aistudio.google.com> → login Google → **Get API key** →
+   buat key (gratis, tanpa kartu kredit).
+2. `npx supabase secrets set GEMINI_API_KEY=key-anda`
+3. `npx supabase functions deploy ai-assistant`
+
+Catatan: free tier punya batas pemakaian harian (longgar untuk pemakaian
+pribadi). Kalau habis, app menampilkan pesannya dan bisa dicoba lagi besok.
+
+Coba: ketik di Home "meeting sama klien besok jam 3 sore, ingatkan 30 menit
+sebelum" → acara + reminder langsung dibuat.
