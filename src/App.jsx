@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import Loader from './components/Loader'
+import LoadingScene from './components/LoadingScene'
 import BottomNav from './components/BottomNav'
 import Home from './pages/Home'
 import Tasks from './pages/Tasks'
@@ -97,7 +97,7 @@ export default function App() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6, ease: 'easeInOut' }}
           >
-            <Loader />
+            <LoadingScene />
           </motion.div>
         )}
       </AnimatePresence>
