@@ -58,7 +58,7 @@ export default function Modal({ open, onClose, title, children }) {
                 type="button"
                 onClick={onClose}
                 aria-label="Tutup"
-                className="rounded-full p-1.5 text-subtle hover:bg-white/50 hover:text-ink dark:hover:bg-white/10 dark:hover:text-ink-dark"
+                className="rounded-full p-1.5 text-subtle hover:bg-line-soft hover:text-ink dark:hover:bg-line-soft-dark dark:hover:text-ink-dark"
               >
                 <X size={18} />
               </button>

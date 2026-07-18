@@ -7,7 +7,7 @@ import { usePush } from '../hooks/usePush'
 import { useAuth } from '../store/AuthContext'
 
 const PERMISSION_LABEL = {
-  default: { text: 'Belum diminta', cls: 'bg-white/40 text-subtle dark:bg-white/10' },
+  default: { text: 'Belum diminta', cls: 'bg-surface-2 text-subtle dark:bg-surface-2-dark' },
   granted: { text: 'Diizinkan', cls: 'bg-brand-soft text-brand' },
   denied: { text: 'Ditolak', cls: 'bg-accent/10 text-accent' },
 }
@@ -49,7 +49,7 @@ export default function Settings() {
               local-only.
             </p>
           ) : !push.supported ? (
-            <div className="mt-4 flex items-start gap-2.5 rounded-xl bg-white/40 p-3 text-xs leading-relaxed text-subtle dark:bg-white/5">
+            <div className="mt-4 flex items-start gap-2.5 rounded-xl bg-surface-2 p-3 text-xs leading-relaxed text-subtle dark:bg-surface-2-dark">
               <Smartphone size={15} className="mt-0.5 shrink-0" />
               {push.needsInstall ? (
                 <span>

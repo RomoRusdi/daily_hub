@@ -103,35 +103,37 @@ export default function AIPrompt() {
 
   return (
     <div>
-      {/* Gradient halo ring + glow around the glass form (see .ai-halo). */}
-      <div className="ai-halo rounded-2xl">
-        <form
-          onSubmit={handleSubmit}
-          className="glass flex items-center gap-2 rounded-[calc(1rem-1.5px)] border-0 px-3.5 py-3"
-        >
-          <Sparkles size={18} strokeWidth={1.75} className="shrink-0 text-brand" />
-          <input
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            placeholder={busy ? 'Sebentar…' : 'Apa yang bisa kubantu hari ini?'}
-            disabled={busy}
-            className="min-w-0 flex-1 bg-transparent text-sm text-ink placeholder:text-muted focus:outline-none disabled:opacity-60 dark:text-ink-dark"
-            aria-label="Tanya asisten AI"
-          />
+      {/* Input bersih gaya Graphite: surface + border tipis, sparkle aksen,
+          chip ⌘K saat kosong ↔ tombol kirim saat ada teks. */}
+      <form
+        onSubmit={handleSubmit}
+        className="input-glass flex items-center gap-2.5 rounded-xl px-3.5 py-3"
+      >
+        <Sparkles size={17} strokeWidth={2} className="text-brand shrink-0" />
+        <input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder={busy ? 'Sebentar…' : 'Tanya asisten…'}
+          disabled={busy}
+          className="min-w-0 flex-1 bg-transparent text-[13.5px] text-ink placeholder:text-muted focus:outline-none disabled:opacity-60 dark:text-ink-dark"
+          aria-label="Tanya asisten AI"
+        />
+        {busy ? (
+          <Loader2 size={16} className="shrink-0 animate-spin text-muted" />
+        ) : value.trim() ? (
           <button
             type="submit"
             aria-label="Kirim"
-            disabled={busy || !value.trim()}
-            className="bg-brand flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-opacity disabled:opacity-30"
+            className="bg-brand flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
           >
-            {busy ? (
-              <Loader2 size={16} className="animate-spin" />
-            ) : (
-              <ArrowUp size={16} strokeWidth={2.25} />
-            )}
+            <ArrowUp size={15} strokeWidth={2.25} />
           </button>
-        </form>
-      </div>
+        ) : (
+          <kbd className="shrink-0 rounded-[5px] border border-line px-1.5 py-0.5 font-mono text-[10.5px] text-muted dark:border-line-dark">
+            ⌘K
+          </kbd>
+        )}
+      </form>
 
       {/* Assistant reply, dismissible */}
       {reply && (

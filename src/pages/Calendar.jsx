@@ -62,7 +62,7 @@ export default function Calendar() {
             type="button"
             onClick={() => shiftMonth(-1)}
             aria-label="Bulan sebelumnya"
-            className="rounded-full p-1.5 text-subtle hover:bg-white/50 dark:hover:bg-white/10"
+            className="rounded-full p-1.5 text-subtle hover:bg-line-soft dark:hover:bg-line-soft-dark"
           >
             <ChevronLeft size={17} />
           </button>
@@ -70,7 +70,7 @@ export default function Calendar() {
             type="button"
             onClick={() => shiftMonth(1)}
             aria-label="Bulan berikutnya"
-            className="rounded-full p-1.5 text-subtle hover:bg-white/50 dark:hover:bg-white/10"
+            className="rounded-full p-1.5 text-subtle hover:bg-line-soft dark:hover:bg-line-soft-dark"
           >
             <ChevronRight size={17} />
           </button>
@@ -108,7 +108,7 @@ export default function Calendar() {
                       ? 'bg-brand shadow-brand'
                       : isToday
                         ? 'font-semibold text-brand'
-                        : 'text-ink hover:bg-white/50 dark:text-ink-dark dark:hover:bg-white/10')
+                        : 'text-ink hover:bg-line-soft dark:text-ink-dark dark:hover:bg-line-soft-dark')
                   }
                 >
                   {day}
@@ -131,11 +131,11 @@ export default function Calendar() {
       </Reveal>
 
       {/* Agenda for the selected day */}
-      <div className="mb-2 flex items-baseline justify-between px-1">
-        <h3 className="text-sm font-medium capitalize">
+      <div className="mb-2.5 flex items-baseline justify-between px-1">
+        <h3 className="section-label">
           {selected === today ? 'Hari ini' : weekdayDate(selected)}
         </h3>
-        <span className="text-xs text-muted">
+        <span className="font-mono text-[11px] text-muted">
           {selectedEvents.length} acara
         </span>
       </div>
@@ -151,9 +151,9 @@ export default function Calendar() {
           {selectedEvents.map((ev, i) => (
             <Reveal key={ev.id} delay={Math.min(i * 0.06, 0.24)} y={14}>
             <div className="group flex gap-3">
-              {/* Time rail + timeline — brand-tinted chip (Ember Glow). */}
+              {/* Time rail + timeline — chip aksen lembut, jam monospace. */}
               <div className="bg-brand-soft flex h-fit w-14 shrink-0 flex-col items-center rounded-xl py-2">
-                <span className="text-brand text-sm font-semibold leading-none">
+                <span className="text-brand font-mono text-xs font-semibold leading-none">
                   {ev.time || '—'}
                 </span>
                 {ev.duration && (
@@ -167,7 +167,7 @@ export default function Calendar() {
                     (ev.accent ? 'bg-accent' : 'bg-brand')
                   }
                 />
-                <span className="w-px flex-1 bg-ink/10 dark:bg-white/10" />
+                <span className="w-px flex-1 bg-line dark:bg-line-dark" />
               </div>
 
               {/* Event card */}

@@ -148,7 +148,7 @@ export default function NoteEditor() {
               type="button"
               onClick={onClick}
               aria-label={label}
-              className="rounded-lg p-2 text-subtle hover:bg-white/50 hover:text-ink dark:hover:bg-white/10 dark:hover:text-ink-dark"
+              className="rounded-lg p-2 text-subtle hover:bg-line-soft hover:text-ink dark:hover:bg-line-soft-dark dark:hover:text-ink-dark"
             >
               <Icon size={18} strokeWidth={1.75} />
             </button>

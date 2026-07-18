@@ -13,14 +13,12 @@ import { inputClass } from '../components/Field'
 import { useData } from '../store/DataContext'
 import { todayKey } from '../utils/date'
 
-// Uppercase, letter-spaced section label with a count — matches the mockup.
+// Label bagian gaya Graphite: monospace uppercase + jumlah item.
 function GroupLabel({ children, count }) {
   return (
-    <div className="mb-1.5 mt-5 flex items-center gap-2 px-1 first:mt-0">
-      <h2 className="text-[11px] font-semibold uppercase tracking-wider text-muted">
-        {children}
-      </h2>
-      <span className="text-[11px] text-muted">{count}</span>
+    <div className="mb-2.5 mt-5 flex items-center gap-2 px-1 first:mt-0">
+      <h2 className="section-label">{children}</h2>
+      <span className="font-mono text-[11px] text-muted">{count}</span>
     </div>
   )
 }
@@ -30,8 +28,8 @@ function TaskGroup({ label, items, delay = 0, ...handlers }) {
   return (
     <Reveal delay={delay}>
       <GroupLabel count={items.length}>{label}</GroupLabel>
-      <Card lite className="px-4 py-1">
-        <div className="divide-y divide-ink/5 dark:divide-white/10">
+      <Card lite className="overflow-hidden">
+        <div className="divide-y divide-line-soft dark:divide-line-soft-dark">
           <AnimatePresence initial={false}>
             {items.map((t) => (
               <TaskRow key={t.id} task={t} {...handlers} />

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { ChevronRight, MapPin, CalendarClock, Plus } from 'lucide-react'
+import { ChevronRight, MapPin, Plus } from 'lucide-react'
 import Header from '../components/Header'
 import Card from '../components/Card'
 import Reveal from '../components/Reveal'
@@ -14,11 +14,11 @@ import { useData } from '../store/DataContext'
 import { useToast } from '../components/Toast'
 import { todayKey, shortDate } from '../utils/date'
 
-// Small labelled section header with an optional "see all" link.
+// Label bagian gaya Graphite: monospace uppercase + link "Lihat semua".
 function SectionTitle({ children, to }) {
   return (
-    <div className="mb-2 flex items-center justify-between px-1">
-      <h2 className="text-sm font-medium text-subtle">{children}</h2>
+    <div className="mb-2.5 flex items-center justify-between px-1">
+      <h2 className="section-label">{children}</h2>
       {to && (
         <Link
           to={to}
@@ -31,12 +31,11 @@ function SectionTitle({ children, to }) {
   )
 }
 
-// Left "rail" of an event card: big time + small duration, brand-tinted so
-// the timeline reads as a rail of glowing time chips (Ember Glow mockup).
+// Left "rail" of an event card: jam monospace di chip aksen lembut.
 function EventRail({ time, duration }) {
   return (
     <div className="bg-brand-soft flex w-14 shrink-0 flex-col items-center justify-center rounded-xl py-2">
-      <span className="text-brand text-sm font-semibold leading-none">
+      <span className="text-brand font-mono text-xs font-semibold leading-none">
         {time || '—'}
       </span>
       {duration && (
@@ -93,46 +92,27 @@ export default function Home() {
         <AIPrompt />
       </Reveal>
 
-      {/* Today summary + next event, merged into one card (mockup 1b):
-          progress on the left, next-event tile on the right. */}
+      {/* Progress card (Graphite): ring + "N dari M selesai" + meta Next. */}
       <Reveal delay={0.07}>
-      <Card className="mb-6 p-3">
-        <div className="flex items-stretch gap-3">
-          <div className="flex shrink-0 items-center gap-3 py-1 pl-1">
-            <ProgressRing value={progress} size={52} />
-            <div>
-              <p className="text-lg font-semibold leading-tight">
-                {remaining.length}
-                <span className="text-sm font-normal text-muted">
-                  {' '}/ {todaysTasks.length}
-                </span>
-              </p>
-              <p className="text-xs text-subtle">tugas tersisa</p>
-            </div>
-          </div>
-          <div className="min-w-0 flex-1 rounded-xl bg-white/40 p-2.5 dark:bg-white/5">
-            <p className="flex items-center gap-1.5 text-[11px] text-subtle">
-              <CalendarClock size={13} strokeWidth={1.75} className="shrink-0" />
-              Berikutnya
-              {nextEvent?.time && (
-                <span className="text-brand font-semibold">· {nextEvent.time}</span>
-              )}
-            </p>
+      <Card className="mb-6 flex items-center gap-3.5 p-4">
+        <ProgressRing value={progress} size={54} />
+        <div className="min-w-0 flex-1">
+          <p className="text-[15px] font-semibold">
+            {doneCount} dari {todaysTasks.length} selesai
+          </p>
+          <p className="mt-1 truncate text-xs text-subtle">
             {nextEvent ? (
               <>
-                <p className="mt-1 truncate text-sm font-medium">
-                  {nextEvent.title}
-                </p>
-                {nextEvent.location && (
-                  <p className="mt-0.5 truncate text-[11px] text-muted">
-                    {nextEvent.location}
-                  </p>
-                )}
+                Next ·{' '}
+                <span className="text-brand font-mono font-semibold">
+                  {nextEvent.time || '—'}
+                </span>{' '}
+                {nextEvent.title}
               </>
             ) : (
-              <p className="mt-1 text-sm text-muted">Tidak ada acara</p>
+              'Tidak ada acara berikutnya'
             )}
-          </div>
+          </p>
         </div>
       </Card>
       </Reveal>
@@ -140,14 +120,14 @@ export default function Home() {
       {/* Today's tasks */}
       <Reveal delay={0.14} className="mb-6">
       <section>
-        <SectionTitle to="/tasks">Tugas hari ini</SectionTitle>
-        <Card className="px-4 py-1">
+        <SectionTitle to="/tasks">Tugas · Hari ini</SectionTitle>
+        <Card className="overflow-hidden">
           {todaysTasks.length === 0 ? (
             <p className="py-6 text-center text-sm text-muted">
               Tidak ada tugas untuk hari ini.
             </p>
           ) : (
-            <div className="divide-y divide-ink/5 dark:divide-white/10">
+            <div className="divide-y divide-line-soft dark:divide-line-soft-dark">
               <AnimatePresence initial={false}>
                 {todaysTasks.slice(0, 5).map((task) => (
                   <TaskRow key={task.id} task={task} onToggle={toggleTask} />

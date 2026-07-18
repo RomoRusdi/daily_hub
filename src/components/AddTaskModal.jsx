@@ -77,7 +77,7 @@ export default function AddTaskModal({ open, onClose, onSubmit, defaultDate }) {
           className="w-full bg-transparent pb-3 text-lg font-medium placeholder:text-muted focus:outline-none"
         />
 
-        <div className="divide-y divide-ink/5 dark:divide-white/10 border-y border-ink/10 dark:border-white/10">
+        <div className="divide-y divide-line-soft dark:divide-line-soft-dark border-y border-line dark:border-line-dark">
           <Row icon={CalendarDays} label="Tanggal & waktu">
             <input
               type="date"

@@ -5,29 +5,43 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Monochrome design tokens. Each token has a light + dark value,
-        // consumed via the `dark:` variant in components.
+        // Tema "Graphite" (Linear-style): monokrom tajam + satu aksen indigo.
+        // Aksen indigo dipegang CSS var --brand (teks/ikon: #5b63e0 light,
+        // #8189f4 dark) dan --brand-from/to (fill flat #5b63e0) — lihat
+        // index.css. Token `accent` di bawah = DANGER (penanda prioritas).
         bg: {
-          DEFAULT: '#FAFAFA',
-          dark: '#1A1613', // warm charcoal, matches the atmospheric backdrop
+          DEFAULT: '#f7f7f9',
+          dark: '#0c0d10',
         },
         surface: {
-          DEFAULT: '#FFFFFF',
-          dark: '#26221B', // clearly lighter than bg → real elevation
+          DEFAULT: '#ffffff',
+          dark: '#141519',
+        },
+        'surface-2': {
+          DEFAULT: '#f1f2f5',
+          dark: '#16181d',
         },
         line: {
-          DEFAULT: '#EAEAEA',
-          dark: '#3A322A',
+          DEFAULT: '#e7e8ec',
+          dark: '#23252b',
+        },
+        'line-soft': {
+          DEFAULT: '#eef0f2',
+          dark: '#202227',
+        },
+        'ring-track': {
+          DEFAULT: '#e9eaee',
+          dark: '#26282e',
         },
         ink: {
-          DEFAULT: '#1A1A1A', // primary text
-          dark: '#F4EFE7', // warm off-white
+          DEFAULT: '#16181d',
+          dark: '#f4f5f7',
         },
-        // Secondary text reads CSS vars (see index.css) so it swaps to warm
-        // greys in dark mode without per-component `dark:` classes.
+        // Secondary text reads CSS vars (see index.css) so dark mode swaps
+        // without per-component `dark:` classes.
         subtle: 'var(--text-subtle)',
         muted: 'var(--text-muted)',
-        accent: '#D97706', // amber — reserved for urgent / today
+        accent: '#e0564a', // danger — prioritas/deadline (dulunya amber)
       },
       fontFamily: {
         sans: [
@@ -39,10 +53,11 @@ export default {
           'Roboto',
           'sans-serif',
         ],
+        mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
       borderRadius: {
-        xl: '0.875rem', // ~14px soft corners
-        '2xl': '1rem',
+        xl: '0.75rem', // 12px — control (input AI hero)
+        '2xl': '0.875rem', // 14px — kartu, list container, nav
       },
       maxWidth: {
         app: '28rem', // mobile-first content column (~max-w-md)

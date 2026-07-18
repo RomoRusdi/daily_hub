@@ -8,14 +8,14 @@ const variants = {
     'bg-brand shadow-brand hover:opacity-95 active:scale-[0.99] ' +
     'rounded-xl px-4 py-2.5 text-sm',
   secondary:
-    'glass text-ink hover:bg-white/70 dark:text-ink-dark ' +
+    'glass text-ink hover:bg-surface-2 dark:hover:bg-surface-2-dark dark:text-ink-dark ' +
     'rounded-xl px-4 py-2.5 text-sm',
   ghost:
-    'text-subtle hover:text-ink hover:bg-white/40 dark:hover:text-ink-dark ' +
-    'dark:hover:bg-white/10 rounded-xl px-3 py-2 text-sm',
+    'text-subtle hover:text-ink hover:bg-line-soft dark:hover:text-ink-dark ' +
+    'dark:hover:bg-line-soft-dark rounded-xl px-3 py-2 text-sm',
   icon:
-    'text-subtle hover:text-ink hover:bg-white/40 dark:hover:text-ink-dark ' +
-    'dark:hover:bg-white/10 rounded-full p-2',
+    'text-subtle hover:text-ink hover:bg-line-soft dark:hover:text-ink-dark ' +
+    'dark:hover:bg-line-soft-dark rounded-full p-2',
 }
 
 export default function Button({

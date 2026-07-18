@@ -1,5 +1,7 @@
-// Simple SVG progress ring used on the Home summary card.
-export default function ProgressRing({ value = 0, size = 56, stroke = 5, label }) {
+// Progress ring (Graphite): indikator flat indigo di atas track ring-track,
+// angka % monospace di tengah. Fill memakai --brand-from (#5b63e0, sama di
+// kedua mode) sesuai spek — --brand dipakai untuk teks/ikon saja.
+export default function ProgressRing({ value = 0, size = 54, stroke = 6, label }) {
   const pct = Math.max(0, Math.min(100, value))
   const r = (size - stroke) / 2
   const c = 2 * Math.PI * r
@@ -14,7 +16,7 @@ export default function ProgressRing({ value = 0, size = 56, stroke = 5, label }
           r={r}
           fill="none"
           strokeWidth={stroke}
-          className="stroke-line dark:stroke-line-dark"
+          className="stroke-ring-track dark:stroke-ring-track-dark"
         />
         <circle
           cx={size / 2}
@@ -22,13 +24,13 @@ export default function ProgressRing({ value = 0, size = 56, stroke = 5, label }
           r={r}
           fill="none"
           strokeWidth={stroke}
-          strokeLinecap="round"
           strokeDasharray={c}
           strokeDashoffset={offset}
-          className="stroke-brand transition-all duration-500"
+          style={{ stroke: 'var(--brand-from)' }}
+          className="transition-all duration-500"
         />
       </svg>
-      <span className="absolute inset-0 flex items-center justify-center text-xs font-semibold">
+      <span className="absolute inset-0 flex items-center justify-center font-mono text-xs font-semibold">
         {label ?? `${Math.round(pct)}%`}
       </span>
     </div>

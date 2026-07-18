@@ -4,23 +4,17 @@ import Checkbox from './Checkbox'
 import { listItem } from '../lib/motion'
 import { todayKey, weekdayDate } from '../utils/date'
 
-// Build the muted subtitle under a task title.
-function subtitleFor(task) {
-  if (task.date > todayKey()) return weekdayDate(task.date)
-  if (task.time) return task.deadline ? `${task.time} · Deadline` : task.time
-  return ''
-}
-
 /**
- * A single task row: circular checkbox + title + optional subtitle.
- * Shared between Home and the Tasks page. Urgent (high-priority) tasks get
- * a tinted "Penting" chip.
+ * Satu baris tugas (Graphite): checkbox kotak + judul; jam monospace di
+ * kanan; titik danger 7×7 untuk tugas prioritas. Dipakai di Home & Tasks —
+ * parent-nya menyediakan kartu + divider `line-soft`.
  *
  * @param {fn} [onDelete] when provided, a trash button appears on hover
  */
 export default function TaskRow({ task, onToggle, onDelete }) {
   const urgent = task.priority === 'high' && !task.done
-  const subtitle = subtitleFor(task)
+  // Untuk tugas di hari lain, tampilkan tanggalnya sebagai meta di bawah judul.
+  const dateMeta = task.date > todayKey() ? weekdayDate(task.date) : ''
 
   return (
     <motion.div
@@ -29,18 +23,17 @@ export default function TaskRow({ task, onToggle, onDelete }) {
       initial="initial"
       animate="animate"
       exit="exit"
-      className="group flex items-center gap-3 py-2.5"
+      className="group flex items-center gap-3 px-3.5 py-[13px]"
     >
       <Checkbox
         checked={task.done}
-        accent={urgent}
         label={task.title}
         onChange={() => onToggle?.(task.id)}
       />
       <div className="min-w-0 flex-1">
         <p
           className={
-            'truncate text-[15px] ' +
+            'truncate text-sm ' +
             (task.done
               ? 'text-muted line-through'
               : 'text-ink dark:text-ink-dark')
@@ -48,17 +41,25 @@ export default function TaskRow({ task, onToggle, onDelete }) {
         >
           {task.title}
         </p>
-        {subtitle && (
+        {dateMeta && (
           <span className="mt-0.5 block truncate text-xs text-subtle">
-            {subtitle}
+            {dateMeta}
           </span>
         )}
       </div>
 
-      {urgent && (
-        <span className="shrink-0 rounded-full bg-accent/10 px-2 py-0.5 text-[11px] font-medium text-accent">
-          Penting
+      {task.time && (
+        <span
+          className={
+            'shrink-0 font-mono text-[11px] ' +
+            (task.done ? 'text-muted' : 'text-subtle')
+          }
+        >
+          {task.time}
         </span>
+      )}
+      {urgent && (
+        <span className="h-[7px] w-[7px] shrink-0 rounded-[2px] bg-accent" />
       )}
 
       {onDelete && (
